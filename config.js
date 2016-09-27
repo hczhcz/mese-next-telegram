@@ -2,6 +2,7 @@
 
 module.exports = {
     gatherTimeout: 300000,
+    goTimeout: 60000,
     interval: 1000,
     bot: {
         polling: true,

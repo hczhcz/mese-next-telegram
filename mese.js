@@ -23,17 +23,13 @@ const nameList = (users) => {
     return result;
 };
 
-const gatherTime = (now, gather) => {
-    return config.gatherTimeout - now + gather.date;
-};
-
 setInterval(() => {
     const now = Date.now();
 
     for (const i in gathers) {
         const gather = gathers[i];
 
-        if (gatherTime(now, gather) < 0) {
+        if (gather.date < now) {
             bot.sendMessage(
                 gather.chat.id,
                 'Game is started\n\n'
@@ -61,7 +57,7 @@ bot.onText(/\/join/, (msg, match) => {
             msg.chat.id,
             'OK: Join game\n\n'
             + 'Game will start in: ' + Math.round(
-                gatherTime(now, gather) / 1000
+                (gather.date - now) / 1000
             ) + 's\n'
             + 'Current players:\n' + nameList(gather.users),
             {reply_to_message_id: msg.message_id}
@@ -70,7 +66,7 @@ bot.onText(/\/join/, (msg, match) => {
         const gather = gathers[msg.chat.id] = {
             chat: msg.chat,
             users: {},
-            date: now,
+            date: now + config.gatherTimeout,
         };
 
         gather.users[msg.from.id] = msg.from;
@@ -79,7 +75,7 @@ bot.onText(/\/join/, (msg, match) => {
             msg.chat.id,
             'OK: New game\n\n'
             + 'Game will start in: ' + Math.round(
-                gatherTime(now, gather) / 1000
+                (gather.date - now) / 1000
             ) + 's\n'
             + 'Current players:\n' + nameList(gather.users),
             {reply_to_message_id: msg.message_id}
@@ -106,7 +102,7 @@ bot.onText(/\/leave/, (msg, match) => {
                 msg.chat.id,
                 'OK: Leave game\n\n'
                 + 'Game will start in: ' + Math.round(
-                    gatherTime(now, gather) / 1000
+                    (gather.date - now) / 1000
                 ) + 's\n'
                 + 'Current players:\n' + nameList(gather.users),
                 {reply_to_message_id: msg.message_id}
@@ -121,6 +117,40 @@ bot.onText(/\/leave/, (msg, match) => {
                 {reply_to_message_id: msg.message_id}
             );
         }
+    } else {
+        bot.sendMessage(
+            msg.chat.id,
+            'Fail: Game does not exist\n',
+            {reply_to_message_id: msg.message_id}
+        );
+    }
+});
+
+bot.onText(/\/go/, (msg, match) => {
+    const now = Date.now();
+
+    if (games[msg.chat.id]) {
+        bot.sendMessage(
+            msg.chat.id,
+            'Fail: Game is running now\n',
+            {reply_to_message_id: msg.message_id}
+        );
+    } else if (gathers[msg.chat.id]) {
+        const gather = gathers[msg.chat.id];
+
+        if (gather.date > now + config.goTimeout) {
+            gather.date = now + config.goTimeout;
+        }
+
+        bot.sendMessage(
+            msg.chat.id,
+            'OK: Ready to start\n\n'
+            + 'Game will start in: ' + Math.round(
+                (gather.date - now) / 1000
+            ) + 's\n'
+            + 'Current players:\n' + nameList(gather.users),
+            {reply_to_message_id: msg.message_id}
+        );
     } else {
         bot.sendMessage(
             msg.chat.id,
