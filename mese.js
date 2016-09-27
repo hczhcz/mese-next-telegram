@@ -15,10 +15,11 @@ const nameList = (users) => {
     let result = '';
 
     for (const i in users) {
-        result += users[i].username
-            || (users[i].first_name + ' ' + users[i].last_name)
-            || i;
-        result += '\n';
+        if (users[i].username) {
+            result += '@' + users[i].username + '\n'
+        } else {
+            result += users[i].first_name + ' ' + users[i].last_name + '\n'
+        }
     }
 
     return result;
@@ -96,7 +97,7 @@ bot.onText(/\/join/, (msg, match) => {
     }
 });
 
-bot.onText(/\/leave/, (msg, match) => {
+bot.onText(/\/flee/, (msg, match) => {
     const now = Date.now();
 
     if (games[msg.chat.id]) {
