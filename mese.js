@@ -36,11 +36,26 @@ setInterval(() => {
 
             delete gathers[i];
 
+            game.closeDate = now + config.closeTimeout;
+
             bot.sendMessage(
                 i,
                 'Game started\n\n'
                 + 'Players:\n' + nameList(game.users)
             );
+        }
+    }
+
+    for (const i in games) {
+        const game = games[i];
+
+        if (game.closeDate < now) {
+            for (const j in game.users) {
+                bot.sendMessage(
+                    j,
+                    'test\n'
+                );
+            }
         }
     }
 }, config.interval);
