@@ -9,6 +9,7 @@ const bot = new tgbot(token, config.bot);
 
 const gathers = {};
 const games = {};
+const userGames = {};
 
 const nameList = (users) => {
     let result = '';
@@ -52,10 +53,17 @@ bot.onText(/\/join/, (msg, match) => {
             'Fail: Game is running now\n',
             {reply_to_message_id: msg.message_id}
         );
+    } else if (userGames[msg.from.id]) {
+        bot.sendMessage(
+            msg.chat.id,
+            'Fail: You are in another game\n',
+            {reply_to_message_id: msg.message_id}
+        );
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
 
         gather.users[msg.from.id] = msg.from;
+        userGames[msg.from.id] = msg.from;
 
         bot.sendMessage(
             msg.chat.id,
@@ -74,6 +82,7 @@ bot.onText(/\/join/, (msg, match) => {
         };
 
         gather.users[msg.from.id] = msg.from;
+        userGames[msg.from.id] = msg.from;
 
         bot.sendMessage(
             msg.chat.id,
@@ -100,6 +109,7 @@ bot.onText(/\/leave/, (msg, match) => {
         const gather = gathers[msg.chat.id];
 
         delete gather.users[msg.from.id];
+        delete userGames[msg.from.id];
 
         if (gather.users.length) {
             bot.sendMessage(
