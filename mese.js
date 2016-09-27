@@ -141,7 +141,7 @@ bot.onText(/\/flee/, (msg, match) => {
     }
 });
 
-bot.onText(/\/go/, (msg, match) => {
+bot.onText(/\/ready/, (msg, match) => {
     const now = Date.now();
 
     if (games[msg.chat.id]) {
@@ -153,8 +153,8 @@ bot.onText(/\/go/, (msg, match) => {
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
 
-        if (gather.date > now + config.goTimeout) {
-            gather.date = now + config.goTimeout;
+        if (gather.date > now + config.readyTimeout) {
+            gather.date = now + config.readyTimeout;
         }
 
         bot.sendMessage(
