@@ -40,7 +40,8 @@ setInterval(() => {
 
             bot.sendMessage(
                 i,
-                'Game started\n\n'
+                'Game started\n'
+                + '\n'
                 + 'Players:\n' + nameList(game.users)
             );
         }
@@ -74,7 +75,7 @@ bot.onText(/\/join/, (msg, match) => {
     } else if (userGames[msg.from.id]) {
         bot.sendMessage(
             msg.chat.id,
-            'Fail: You are in another game\n',
+            'Fail: You are in a game now\n',
             {
                 reply_to_message_id: msg.message_id,
             }
@@ -92,11 +93,14 @@ bot.onText(/\/join/, (msg, match) => {
 
                 bot.sendMessage(
                     msg.chat.id,
-                    'OK: Join game\n\n'
+                    'OK: Join game\n'
+                    + '\n'
                     + 'Game will start in: ' + Math.round(
                         (gather.date - now) / 1000
                     ) + 's\n'
-                    + 'Current players:\n' + nameList(gather.users),
+                    + 'Current players:\n' + nameList(gather.users)
+                    + '\n'
+                    + '/join /flee\n',
                     {
                         reply_to_message_id: msg.message_id,
                     }
@@ -113,11 +117,14 @@ bot.onText(/\/join/, (msg, match) => {
 
                 bot.sendMessage(
                     msg.chat.id,
-                    'OK: New game\n\n'
+                    'OK: New game\n'
+                    + '\n'
                     + 'Game will start in: ' + Math.round(
                         (gather.date - now) / 1000
                     ) + 's\n'
-                    + 'Current players:\n' + nameList(gather.users),
+                    + 'Current players:\n' + nameList(gather.users)
+                    + '\n'
+                    + '/join /flee\n',
                     {
                         reply_to_message_id: msg.message_id,
                     }
@@ -161,7 +168,8 @@ bot.onText(/\/flee/, (msg, match) => {
         if (gather.users.length) {
             bot.sendMessage(
                 msg.chat.id,
-                'OK: Leave game\n\n'
+                'OK: Leave game\n'
+                + '\n'
                 + 'Game will start in: ' + Math.round(
                     (gather.date - now) / 1000
                 ) + 's\n'
@@ -175,7 +183,8 @@ bot.onText(/\/flee/, (msg, match) => {
 
             bot.sendMessage(
                 msg.chat.id,
-                'OK: Leave game\n\n'
+                'OK: Leave game\n'
+                + '\n'
                 + 'Game is canceled\n',
                 {
                     reply_to_message_id: msg.message_id,
@@ -213,7 +222,8 @@ bot.onText(/\/ready/, (msg, match) => {
 
         bot.sendMessage(
             msg.chat.id,
-            'OK: Ready to start\n\n'
+            'OK: Ready to start\n'
+            + '\n'
             + 'Game will start in: ' + Math.round(
                 (gather.date - now) / 1000
             ) + 's\n'
