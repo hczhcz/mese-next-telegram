@@ -30,10 +30,14 @@ setInterval(() => {
         const gather = gathers[i];
 
         if (gather.date < now) {
+            const game = games[i] = gather;
+
+            delete gathers[i];
+
             bot.sendMessage(
-                gather.chat.id,
-                'Game is started\n\n'
-                + 'Players:\n' + nameList(gather.users)
+                i,
+                'Game started\n\n'
+                + 'Players:\n' + nameList(game.users)
             );
         }
     }
