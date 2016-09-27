@@ -60,40 +60,55 @@ bot.onText(/\/join/, (msg, match) => {
             'Fail: You are in another game\n',
             {reply_to_message_id: msg.message_id}
         );
-    } else if (gathers[msg.chat.id]) {
-        const gather = gathers[msg.chat.id];
-
-        gather.users[msg.from.id] = msg.from;
-        userGames[msg.from.id] = msg.from;
-
-        bot.sendMessage(
-            msg.chat.id,
-            'OK: Join game\n\n'
-            + 'Game will start in: ' + Math.round(
-                (gather.date - now) / 1000
-            ) + 's\n'
-            + 'Current players:\n' + nameList(gather.users),
-            {reply_to_message_id: msg.message_id}
-        );
     } else {
-        const gather = gathers[msg.chat.id] = {
-            chat: msg.chat,
-            users: {},
-            date: now + config.gatherTimeout,
-        };
-
-        gather.users[msg.from.id] = msg.from;
-        userGames[msg.from.id] = msg.from;
-
         bot.sendMessage(
-            msg.chat.id,
-            'OK: New game\n\n'
-            + 'Game will start in: ' + Math.round(
-                (gather.date - now) / 1000
-            ) + 's\n'
-            + 'Current players:\n' + nameList(gather.users),
-            {reply_to_message_id: msg.message_id}
-        );
+            msg.from.id,
+            'Hello from MESE bot\n'
+        ).then(() => {
+            if (gathers[msg.chat.id]) {
+                const gather = gathers[msg.chat.id];
+
+                gather.users[msg.from.id] = msg.from;
+                userGames[msg.from.id] = msg.from;
+
+                bot.sendMessage(
+                    msg.chat.id,
+                    'OK: Join game\n\n'
+                    + 'Game will start in: ' + Math.round(
+                        (gather.date - now) / 1000
+                    ) + 's\n'
+                    + 'Current players:\n' + nameList(gather.users),
+                    {reply_to_message_id: msg.message_id}
+                );
+            } else {
+                const gather = gathers[msg.chat.id] = {
+                    chat: msg.chat,
+                    users: {},
+                    date: now + config.gatherTimeout,
+                };
+
+                gather.users[msg.from.id] = msg.from;
+                userGames[msg.from.id] = msg.from;
+
+                bot.sendMessage(
+                    msg.chat.id,
+                    'OK: New game\n\n'
+                    + 'Game will start in: ' + Math.round(
+                        (gather.date - now) / 1000
+                    ) + 's\n'
+                    + 'Current players:\n' + nameList(gather.users),
+                    {reply_to_message_id: msg.message_id}
+                );
+            }
+        }, () => {
+            bot.sendMessage(
+                msg.chat.id,
+                'Fail: Please start @' + config.botName + '\n',
+                {reply_to_message_id: msg.message_id}
+            );
+
+            return;
+        });
     }
 });
 
