@@ -42,7 +42,8 @@ setInterval(() => {
                 i,
                 'Game started\n'
                 + '\n'
-                + 'Players:\n' + nameList(game.users)
+                + 'Players:\n'
+                + nameList(game.users)
             );
         }
     }
@@ -95,10 +96,15 @@ bot.onText(/\/join/, (msg, match) => {
                     msg.chat.id,
                     'OK: Join game\n'
                     + '\n'
-                    + 'Game will start in: ' + Math.round(
-                        (gather.date - now) / 1000
-                    ) + 's\n'
-                    + 'Current players:\n' + nameList(gather.users)
+                    + 'Game will start in: '
+                    + Math.round((gather.date - now) / 1000) + 's\n'
+                    + (gather.date > now + config.readyTimeout
+                        ? 'Press /ready for a quick start\n'
+                        : ''
+                    )
+                    + '\n'
+                    + 'Current players:\n'
+                    + nameList(gather.users)
                     + '\n'
                     + '/join /flee\n',
                     {
@@ -119,10 +125,15 @@ bot.onText(/\/join/, (msg, match) => {
                     msg.chat.id,
                     'OK: New game\n'
                     + '\n'
-                    + 'Game will start in: ' + Math.round(
-                        (gather.date - now) / 1000
-                    ) + 's\n'
-                    + 'Current players:\n' + nameList(gather.users)
+                    + 'Game will start in: '
+                    + Math.round((gather.date - now) / 1000) + 's\n'
+                    + (gather.date > now + config.readyTimeout
+                        ? 'Press /ready for a quick start\n'
+                        : ''
+                    )
+                    + '\n'
+                    + 'Current players:\n'
+                    + nameList(gather.users)
                     + '\n'
                     + '/join /flee\n',
                     {
@@ -170,10 +181,11 @@ bot.onText(/\/flee/, (msg, match) => {
                 msg.chat.id,
                 'OK: Leave game\n'
                 + '\n'
-                + 'Game will start in: ' + Math.round(
-                    (gather.date - now) / 1000
-                ) + 's\n'
-                + 'Current players:\n' + nameList(gather.users),
+                + 'Game will start in: '
+                + Math.round((gather.date - now) / 1000) + 's\n'
+                + '\n'
+                + 'Current players:\n'
+                + nameList(gather.users),
                 {
                     reply_to_message_id: msg.message_id,
                 }
@@ -224,10 +236,13 @@ bot.onText(/\/ready/, (msg, match) => {
             msg.chat.id,
             'OK: Ready to start\n'
             + '\n'
-            + 'Game will start in: ' + Math.round(
-                (gather.date - now) / 1000
-            ) + 's\n'
-            + 'Current players:\n' + nameList(gather.users),
+            + 'Game will start in: '
+            + Math.round((gather.date - now) / 1000) + 's\n'
+            + '\n'
+            + 'Current players:\n'
+            + nameList(gather.users)
+            + '\n'
+            + '/join /flee\n',
             {
                 reply_to_message_id: msg.message_id,
             }
