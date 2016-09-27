@@ -67,13 +67,17 @@ bot.onText(/\/join/, (msg, match) => {
         bot.sendMessage(
             msg.chat.id,
             'Fail: Game is running now\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     } else if (userGames[msg.from.id]) {
         bot.sendMessage(
             msg.chat.id,
             'Fail: You are in another game\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     } else {
         bot.sendMessage(
@@ -93,7 +97,9 @@ bot.onText(/\/join/, (msg, match) => {
                         (gather.date - now) / 1000
                     ) + 's\n'
                     + 'Current players:\n' + nameList(gather.users),
-                    {reply_to_message_id: msg.message_id}
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
                 );
             } else {
                 const gather = gathers[msg.chat.id] = {
@@ -112,17 +118,25 @@ bot.onText(/\/join/, (msg, match) => {
                         (gather.date - now) / 1000
                     ) + 's\n'
                     + 'Current players:\n' + nameList(gather.users),
-                    {reply_to_message_id: msg.message_id}
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
                 );
             }
         }, () => {
             bot.sendMessage(
                 msg.chat.id,
                 'Fail: Please start @' + config.botName + '\n',
-                {reply_to_message_id: msg.message_id}
+                {
+                    reply_to_message_id: msg.message_id,
+                    reply_markup: {
+                        inline_keyboard: [[{
+                            text: 'Start',
+                            url: 'https://telegram.me/' + config.botName,
+                        }]],
+                    },
+                }
             );
-
-            return;
         });
     }
 });
@@ -134,7 +148,9 @@ bot.onText(/\/flee/, (msg, match) => {
         bot.sendMessage(
             msg.chat.id,
             'Fail: Game is running now\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
@@ -150,7 +166,9 @@ bot.onText(/\/flee/, (msg, match) => {
                     (gather.date - now) / 1000
                 ) + 's\n'
                 + 'Current players:\n' + nameList(gather.users),
-                {reply_to_message_id: msg.message_id}
+                {
+                    reply_to_message_id: msg.message_id,
+                }
             );
         } else {
             delete gathers[msg.chat.id];
@@ -159,14 +177,18 @@ bot.onText(/\/flee/, (msg, match) => {
                 msg.chat.id,
                 'OK: Leave game\n\n'
                 + 'Game is canceled\n',
-                {reply_to_message_id: msg.message_id}
+                {
+                    reply_to_message_id: msg.message_id,
+                }
             );
         }
     } else {
         bot.sendMessage(
             msg.chat.id,
             'Fail: Game does not exist\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     }
 });
@@ -178,7 +200,9 @@ bot.onText(/\/ready/, (msg, match) => {
         bot.sendMessage(
             msg.chat.id,
             'Fail: Game is running now\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
@@ -194,13 +218,17 @@ bot.onText(/\/ready/, (msg, match) => {
                 (gather.date - now) / 1000
             ) + 's\n'
             + 'Current players:\n' + nameList(gather.users),
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     } else {
         bot.sendMessage(
             msg.chat.id,
             'Fail: Game does not exist\n',
-            {reply_to_message_id: msg.message_id}
+            {
+                reply_to_message_id: msg.message_id,
+            }
         );
     }
 });
