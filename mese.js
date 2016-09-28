@@ -1,12 +1,12 @@
 'use strict';
 
 const fs = require('fs');
-const tgbot = require('node-telegram-bot-api');
+const TelegramBot = require('node-telegram-bot-api');
 const config = require('./config');
 const core = require('./mese.core');
 
 const token = String(fs.readFileSync('token'));
-const bot = new tgbot(token, config.bot);
+const bot = new TelegramBot(token, config.bot);
 
 const gathers = {};
 const games = {};
@@ -49,6 +49,16 @@ setInterval(() => {
             if (gather.ready) {
                 const game = games[i] = gather;
 
+                let total = 0;
+
+                for (const j in game.users) {
+                    game.users[j].index = total;
+                    total += 1;
+                }
+                if (total !== game.total) {
+                    throw 1; // never reach
+                }
+
                 const allocator = (period) => {
                     return (gameData) => {
                         if (period < config.settings.length) {
@@ -61,7 +71,7 @@ setInterval(() => {
                             game.closeDate = now + config.closeTimeout;
                             game.gameData = gameData;
 
-                            core.printPublic(gameData, (report) => {
+                            core.printPublic(game.gameData, (report) => {
                                 bot.sendMessage(
                                     i,
                                     'Game started\n'
@@ -72,15 +82,16 @@ setInterval(() => {
                                 );
                             });
 
-                            for (const i in game.users) {
-                                core.printPlayer(gameData, ???, (report) => {
-                                    sendMessage(
+                            for (const j in game.users) {
+                                core.printPlayer(game.gameData, game.users[j].index, (report) => {
+                                    bot.sendMessage(
+                                        game.users[j].id,
+                                        JSON.stringify(report) // TODO
+                                    ).then(() => {
                                         //
-                                    );
-                                }).then(() => {
-                                    //
-                                }, () => {
-                                    //
+                                    }, () => {
+                                        //
+                                    });
                                 });
                             }
                         }
