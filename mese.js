@@ -37,6 +37,29 @@ const nameList = (users) => {
     return result;
 };
 
+const sendReport = (id, report) => {
+    return bot.sendMessage(
+        id,
+        JSON.stringify(report) // TODO
+    );
+};
+
+const sendAll = (game, i) => {
+    core.printPublic(game.gameData, (report) => {
+        sendReport(i, report);
+    });
+
+    for (const j in game.users) {
+        core.printPlayer(game.gameData, game.users[j].index, (report) => {
+            sendReport(j, report).then(() => {
+                //
+            }, () => {
+                //
+            });
+        });
+    }
+};
+
 setInterval(() => {
     const now = Date.now();
 
@@ -79,21 +102,9 @@ setInterval(() => {
                             game.closeDate = now + config.closeTimeout;
                             game.gameData = gameData;
 
-                            core.printPublic(game.gameData, (report) => {
-                            });
+                            game.period = 1;
 
-                            for (const j in game.users) {
-                                core.printPlayer(game.gameData, game.users[j].index, (report) => {
-                                    bot.sendMessage(
-                                        game.users[j].id,
-                                        JSON.stringify(report) // TODO
-                                    ).then(() => {
-                                        //
-                                    }, () => {
-                                        //
-                                    });
-                                });
-                            }
+                            sendAll(game, i);
                         }
                     };
                 };
@@ -123,18 +134,30 @@ setInterval(() => {
         const game = games[i];
 
         if (game.closeDate && game.closeDate < now) {
-            game.closeDate = now + config.closeTimeout;
+            delete game.closeDate;
 
-            for (const j in game.users) {
-                bot.sendMessage(
-                    j,
-                    'test\n'
-                ).then(() => {
-                    //
-                }, () => {
-                    //
-                });
-            }
+            core.closeForce(game.gameData, (gameData) => {
+                game.closeDate = now + config.closeTimeout;
+                game.gameData = gameData;
+
+                game.period += 1;
+                if (game.period === config.settings.length) {
+                    delete games[i];
+
+                    for (const j in game.users) {
+                        delete userGames[j];
+                    }
+
+                    bot.sendMessage(
+                        i,
+                        'Game finished\n'
+                        + '\n'
+                        + 'Press /join to start a new game'
+                    );
+                }
+
+                sendAll(game, i);
+            });
         }
     }
 }, config.interval);
