@@ -55,9 +55,17 @@ setInterval(() => {
                     game.users[j].index = total;
                     total += 1;
                 }
+
                 if (total !== game.total) {
                     throw 1; // never reach
                 }
+
+                bot.sendMessage(
+                    i,
+                    'Game started\n'
+                    + '\n'
+                    + nameList(game.users)
+                );
 
                 const allocator = (period) => {
                     return (gameData) => {
@@ -72,14 +80,6 @@ setInterval(() => {
                             game.gameData = gameData;
 
                             core.printPublic(game.gameData, (report) => {
-                                bot.sendMessage(
-                                    i,
-                                    'Game started\n'
-                                    + '\n'
-                                    + nameList(game.users)
-                                    + '\n'
-                                    + JSON.stringify(report) // TODO
-                                );
                             });
 
                             for (const j in game.users) {
@@ -277,7 +277,9 @@ bot.onText(/\/flee/, (msg, match) => {
     } else {
         bot.sendMessage(
             msg.chat.id,
-            'Fail: Game does not exist\n',
+            'Fail: Game does not exist\n'
+            + '\n'
+            + 'Press /join to start a new game\n',
             {
                 reply_to_message_id: msg.message_id,
             }
@@ -320,7 +322,9 @@ bot.onText(/\/ready/, (msg, match) => {
     } else {
         bot.sendMessage(
             msg.chat.id,
-            'Fail: Game does not exist\n',
+            'Fail: Game does not exist\n'
+            + '\n'
+            + 'Press /join to start a new game\n',
             {
                 reply_to_message_id: msg.message_id,
             }
