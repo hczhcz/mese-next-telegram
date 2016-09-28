@@ -26,11 +26,11 @@ const readyTime = (ready, date, now) => {
 const nameList = (users) => {
     let result = 'Players:\n';
 
-    for (const i in users) {
-        if (users[i].username) {
-            result += '@' + users[i].username + '\n'
+    for (const j in users) {
+        if (users[j].username) {
+            result += '@' + users[j].username + '\n';
         } else {
-            result += users[i].first_name + ' ' + users[i].last_name + '\n'
+            result += users[j].first_name + ' ' + users[j].last_name + '\n';
         }
     }
 
@@ -94,8 +94,8 @@ setInterval(() => {
                     allocator(1)
                 );
             } else {
-                for (const i in gather.users) {
-                    delete userGames[i];
+                for (const j in gather.users) {
+                    delete userGames[j];
                 }
 
                 bot.sendMessage(
