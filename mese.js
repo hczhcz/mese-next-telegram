@@ -113,6 +113,7 @@ bot.onText(/\/join/, (msg, match) => {
                 const gather = gathers[msg.chat.id];
 
                 gather.users[msg.from.id] = msg.from;
+                gather.total += 1;
                 userGames[msg.from.id] = msg.from;
 
                 bot.sendMessage(
@@ -132,10 +133,12 @@ bot.onText(/\/join/, (msg, match) => {
                 const gather = gathers[msg.chat.id] = {
                     chat: msg.chat,
                     users: {},
+                    total: 0,
                     date: now + config.gatherTimeout,
                 };
 
                 gather.users[msg.from.id] = msg.from;
+                gather.total += 1;
                 userGames[msg.from.id] = msg.from;
 
                 bot.sendMessage(
@@ -184,10 +187,13 @@ bot.onText(/\/flee/, (msg, match) => {
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
 
-        delete gather.users[msg.from.id];
-        delete userGames[msg.from.id];
+        if (gather.users[msg.from.id]) {
+            delete gather.users[msg.from.id];
+            gather.total -= 1;
+            delete userGames[msg.from.id];
+        }
 
-        if (gather.users.length) {
+        if (gather.total > 0) {
             bot.sendMessage(
                 msg.chat.id,
                 'OK: Leave game\n'
