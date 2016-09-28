@@ -11,13 +11,15 @@ const gathers = {};
 const games = {};
 const userGames = {};
 
-const gatherTime = (date, now) => {
-    return 'Game will start in: '
-    + Math.round((date - now) / 1000) + 's\n'
-    + (date > now + config.readyTimeout
-        ? 'Press /ready for a quick start\n'
-        : ''
-    )
+const readyTime = (ready, date, now) => {
+    if (ready) {
+        return 'Game will start in: '
+            + Math.round((date - now) / 1000) + ' seconds\n';
+    } else {
+        return 'Press /ready to start the game\n'
+            + 'Or game will expire in: '
+            + Math.round((date - now) / 1000) + ' seconds\n';
+    }
 };
 
 const nameList = (users) => {
@@ -41,18 +43,31 @@ setInterval(() => {
         const gather = gathers[i];
 
         if (gather.date < now) {
-            const game = games[i] = gather;
-
             delete gathers[i];
 
-            game.closeDate = now + config.closeTimeout;
+            if (gather.ready) {
+                const game = games[i] = gather;
 
-            bot.sendMessage(
-                i,
-                'Game started\n'
-                + '\n'
-                + nameList(game.users)
-            );
+                game.closeDate = now + config.closeTimeout;
+
+                bot.sendMessage(
+                    i,
+                    'Game started\n'
+                    + '\n'
+                    + nameList(game.users)
+                );
+            } else {
+                for (const i in gather.users) {
+                    delete userGames[i];
+                }
+
+                bot.sendMessage(
+                    i,
+                    'Game expired\n'
+                    + '\n'
+                    + 'Please /join the game again'
+                );
+            }
         }
     }
 
@@ -104,7 +119,7 @@ bot.onText(/\/join/, (msg, match) => {
                     msg.chat.id,
                     'OK: Join game\n'
                     + '\n'
-                    + gatherTime(gather.date, now)
+                    + readyTime(gather.ready, gather.date, now)
                     + '\n'
                     + nameList(gather.users)
                     + '\n'
@@ -127,7 +142,7 @@ bot.onText(/\/join/, (msg, match) => {
                     msg.chat.id,
                     'OK: New game\n'
                     + '\n'
-                    + gatherTime(gather.date, now)
+                    + readyTime(gather.ready, gather.date, now)
                     + '\n'
                     + nameList(gather.users)
                     + '\n'
@@ -177,7 +192,7 @@ bot.onText(/\/flee/, (msg, match) => {
                 msg.chat.id,
                 'OK: Leave game\n'
                 + '\n'
-                + gatherTime(gather.date, now)
+                + readyTime(gather.ready, gather.date, now)
                 + '\n'
                 + nameList(gather.users)
                 + '\n'
@@ -224,7 +239,8 @@ bot.onText(/\/ready/, (msg, match) => {
     } else if (gathers[msg.chat.id]) {
         const gather = gathers[msg.chat.id];
 
-        if (gather.date > now + config.readyTimeout) {
+        if (!gather.ready) {
+            gather.ready = true;
             gather.date = now + config.readyTimeout;
         }
 
@@ -232,7 +248,7 @@ bot.onText(/\/ready/, (msg, match) => {
             msg.chat.id,
             'OK: Ready to start\n'
             + '\n'
-            + gatherTime(gather.date, now)
+            + readyTime(gather.ready, gather.date, now)
             + '\n'
             + nameList(gather.users)
             + '\n'

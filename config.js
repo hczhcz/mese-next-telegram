@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    gatherTimeout: 300000,
+    gatherTimeout: 600000,
     readyTimeout: 30000,
     closeTimeout: 300000,
     interval: 1000,
