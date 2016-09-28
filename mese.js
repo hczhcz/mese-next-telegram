@@ -3,6 +3,7 @@
 const fs = require('fs');
 const tgbot = require('node-telegram-bot-api');
 const config = require('./config');
+const core = require('./mese.core');
 
 const token = String(fs.readFileSync('token'));
 const bot = new tgbot(token, config.bot);
@@ -48,13 +49,49 @@ setInterval(() => {
             if (gather.ready) {
                 const game = games[i] = gather;
 
-                game.closeDate = now + config.closeTimeout;
+                const allocator = (period) => {
+                    return (gameData) => {
+                        if (period < config.settings.length) {
+                            core.alloc(
+                                gameData,
+                                config.settings[i],
+                                allocator(period + 1)
+                            );
+                        } else {
+                            game.closeDate = now + config.closeTimeout;
+                            game.gameData = gameData;
 
-                bot.sendMessage(
-                    i,
-                    'Game started\n'
-                    + '\n'
-                    + nameList(game.users)
+                            core.printPublic(gameData, (report) => {
+                                bot.sendMessage(
+                                    i,
+                                    'Game started\n'
+                                    + '\n'
+                                    + nameList(game.users)
+                                    + '\n'
+                                    + JSON.stringify(report) // TODO
+                                );
+                            });
+
+                            for (const i in game.users) {
+                                core.printPlayer(gameData, ???, (report) => {
+                                    sendMessage(
+                                        //
+                                    );
+                                }).then(() => {
+                                    //
+                                }, () => {
+                                    //
+                                });
+                            }
+                        }
+                    };
+                };
+
+                core.init(
+                    String(game.total),
+                    config.preset,
+                    config.settings[0],
+                    allocator(1)
                 );
             } else {
                 for (const i in gather.users) {
@@ -74,12 +111,18 @@ setInterval(() => {
     for (const i in games) {
         const game = games[i];
 
-        if (game.closeDate < now) {
+        if (game.closeDate && game.closeDate < now) {
+            game.closeDate = now + config.closeTimeout;
+
             for (const j in game.users) {
                 bot.sendMessage(
                     j,
                     'test\n'
-                );
+                ).then(() => {
+                    //
+                }, () => {
+                    //
+                });
             }
         }
     }
