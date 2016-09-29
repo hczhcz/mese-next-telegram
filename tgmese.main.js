@@ -7,7 +7,11 @@ const core = require('./mese.core');
 // const report = require('./tgmese.report');
 
 const token = String(fs.readFileSync('token'));
-const bot = new TelegramBot(token, config.bot);
+const bot = new TelegramBot(token, {
+    polling: {
+        interval: config.tgInterval,
+    },
+});
 
 const gathers = {};
 const games = {};
@@ -101,14 +105,14 @@ setInterval(() => {
 
                 const allocator = (period) => {
                     return (gameData) => {
-                        if (period < config.settings.length) {
+                        if (period < config.tgmeseSettings.length) {
                             core.alloc(
                                 gameData,
-                                config.settings[i],
+                                config.tgmeseSettings[i],
                                 allocator(period + 1)
                             );
                         } else {
-                            game.closeDate = now + config.closeTimeout;
+                            game.closeDate = now + config.tgmeseCloseTimeout;
                             game.gameData = gameData;
 
                             game.period = 1;
@@ -120,8 +124,8 @@ setInterval(() => {
 
                 core.init(
                     String(game.total),
-                    config.preset,
-                    config.settings[0],
+                    config.tgmesePreset,
+                    config.tgmeseSettings[0],
                     allocator(1)
                 );
             } else {
@@ -146,11 +150,11 @@ setInterval(() => {
             delete game.closeDate;
 
             core.closeForce(game.gameData, (gameData) => {
-                game.closeDate = now + config.closeTimeout;
+                game.closeDate = now + config.tgmeseCloseTimeout;
                 game.gameData = gameData;
 
                 game.period += 1;
-                if (game.period === config.settings.length) {
+                if (game.period === config.tgmeseSettings.length) {
                     delete games[i];
 
                     for (const j in game.users) {
@@ -169,7 +173,7 @@ setInterval(() => {
             });
         }
     }
-}, config.interval);
+}, config.tgInterval); // TODO: sync with poll?
 
 bot.onText(/\/join/, (msg, match) => {
     const now = Date.now();
@@ -220,7 +224,7 @@ bot.onText(/\/join/, (msg, match) => {
                     chat: msg.chat,
                     users: {},
                     total: 0,
-                    date: now + config.gatherTimeout,
+                    date: now + config.tgGatherTimeout,
                 };
 
                 gather.users[msg.from.id] = msg.from;
@@ -244,13 +248,13 @@ bot.onText(/\/join/, (msg, match) => {
         }, () => {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Please start @' + config.botName + '\n',
+                'Fail: Please start @' + config.tgBot + '\n',
                 {
                     reply_to_message_id: msg.message_id,
                     reply_markup: {
                         inline_keyboard: [[{
                             text: 'Start',
-                            url: 'https://telegram.me/' + config.botName,
+                            url: 'https://telegram.me/' + config.tgBot,
                         }]],
                     },
                 }
@@ -335,7 +339,7 @@ bot.onText(/\/ready/, (msg, match) => {
 
         if (!gather.ready) {
             gather.ready = true;
-            gather.date = now + config.readyTimeout;
+            gather.date = now + config.tgReadyTimeout;
         }
 
         bot.sendMessage(
