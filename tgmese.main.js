@@ -1,17 +1,9 @@
 'use strict';
 
-const fs = require('fs');
-const TelegramBot = require('node-telegram-bot-api');
 const config = require('./config');
 const core = require('./mese.core');
+const tg = require('./server.tg');
 // const report = require('./tgmese.report');
-
-const token = String(fs.readFileSync('token'));
-const bot = new TelegramBot(token, {
-    polling: {
-        interval: config.tgInterval,
-    },
-});
 
 const gathers = {};
 const games = {};
@@ -43,11 +35,7 @@ const nameList = (users) => {
     return result;
 };
 
-const sendReport = (id) => {
-    return ;
-};
-
-const sendAll = (game, i) => {
+const sendAll = (bot, game, i) => {
     core.printPublic(game.gameData, (report) => {
         reports[i] = report;
 
@@ -73,9 +61,7 @@ const sendAll = (game, i) => {
     }
 };
 
-setInterval(() => {
-    const now = Date.now();
-
+tg(config.tgInterval, (bot, now) => {
     for (const i in gathers) {
         const gather = gathers[i];
 
@@ -117,7 +103,7 @@ setInterval(() => {
 
                             game.period = 1;
 
-                            sendAll(game, i);
+                            sendAll(bot, game, i);
                         }
                     };
                 };
@@ -169,15 +155,11 @@ setInterval(() => {
                     );
                 }
 
-                sendAll(game, i);
+                sendAll(bot, game, i);
             });
         }
     }
-}, config.tgInterval); // TODO: sync with poll?
-
-bot.onText(/\/join/, (msg, match) => {
-    const now = Date.now();
-
+}, [[/\/join/, (bot, msg, match, now) => {
     if (games[msg.chat.id]) {
         bot.sendMessage(
             msg.chat.id,
@@ -261,11 +243,7 @@ bot.onText(/\/join/, (msg, match) => {
             );
         });
     }
-});
-
-bot.onText(/\/flee/, (msg, match) => {
-    const now = Date.now();
-
+}], [/\/flee/, (bot, msg, match, now) => {
     if (games[msg.chat.id]) {
         bot.sendMessage(
             msg.chat.id,
@@ -321,11 +299,7 @@ bot.onText(/\/flee/, (msg, match) => {
             }
         );
     }
-});
-
-bot.onText(/\/ready/, (msg, match) => {
-    const now = Date.now();
-
+}], [/\/ready/, (bot, msg, match, now) => {
     if (games[msg.chat.id]) {
         bot.sendMessage(
             msg.chat.id,
@@ -366,4 +340,4 @@ bot.onText(/\/ready/, (msg, match) => {
             }
         );
     }
-});
+}]]);
