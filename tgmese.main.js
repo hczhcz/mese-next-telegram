@@ -4,6 +4,7 @@ const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('./config');
 const core = require('./mese.core');
+// const report = require('./tgmese.report');
 
 const token = String(fs.readFileSync('token'));
 const bot = new TelegramBot(token, config.bot);
@@ -11,6 +12,7 @@ const bot = new TelegramBot(token, config.bot);
 const gathers = {};
 const games = {};
 const userGames = {};
+const reports = {};
 
 const readyTime = (ready, date, now) => {
     if (ready) {
@@ -37,21 +39,28 @@ const nameList = (users) => {
     return result;
 };
 
-const sendReport = (id, report) => {
-    return bot.sendMessage(
-        id,
-        JSON.stringify(report) // TODO
-    );
+const sendReport = (id) => {
+    return ;
 };
 
 const sendAll = (game, i) => {
     core.printPublic(game.gameData, (report) => {
-        sendReport(i, report);
+        reports[i] = report;
+
+        bot.sendMessage(
+            i,
+            reports[i] // TODO
+        );
     });
 
     for (const j in game.users) {
         core.printPlayer(game.gameData, game.users[j].index, (report) => {
-            sendReport(j, report).then(() => {
+            reports[j] = report;
+
+            bot.sendMessage(
+                j,
+                reports[j] // TODO
+            ).then(() => {
                 //
             }, () => {
                 //
