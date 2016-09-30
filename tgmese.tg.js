@@ -44,7 +44,7 @@ const sendAll = (bot, game, i) => {
 
         bot.sendMessage(
             i,
-            reports[i] // TODO
+            JSON.stringify(reports[i]) // TODO
         );
     });
 
@@ -54,7 +54,7 @@ const sendAll = (bot, game, i) => {
 
             bot.sendMessage(
                 j,
-                reports[j] // TODO
+                JSON.stringify(reports[j]) // TODO
             ).then(() => {
                 //
             }, () => {

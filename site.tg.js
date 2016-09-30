@@ -33,7 +33,7 @@ const nameList = (users) => {
 };
 
 module.exports = (bot) => {
-    bot.onText(/\/join/, (msg, match) => {
+    bot.onText(/^\/join/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -62,7 +62,7 @@ module.exports = (bot) => {
 
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
-                    userGames[msg.from.id] = msg.from;
+                    userGames[msg.from.id] = gather;
 
                     bot.sendMessage(
                         msg.chat.id,
@@ -87,7 +87,7 @@ module.exports = (bot) => {
 
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
-                    userGames[msg.from.id] = msg.from;
+                    userGames[msg.from.id] = gather;
 
                     bot.sendMessage(
                         msg.chat.id,
@@ -121,7 +121,7 @@ module.exports = (bot) => {
         }
     });
 
-    bot.onText(/\/flee/, (msg, match) => {
+    bot.onText(/^\/flee/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -181,7 +181,7 @@ module.exports = (bot) => {
         }
     });
 
-    bot.onText(/\/ready/, (msg, match) => {
+    bot.onText(/^\/ready/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
