@@ -1,15 +1,11 @@
 'use strict';
 
 module.exports = {
-    mainContent: (report) => {
-        //
+    list: (report) => {
+        return ['test1', 'test2'];
     },
 
-    sectionList: (report) => {
-        //
-    },
-
-    sectionContent: (report, section) => {
-        //
+    content: (report, section) => {
+        return 'test:' + section;
     },
 };

@@ -56,7 +56,7 @@ module.exports = (bot) => {
             bot.sendMessage(
                 msg.from.id,
                 'Hello from MESE bot\n'
-            ).then(() => {
+            ).then((msgSent) => {
                 if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
 

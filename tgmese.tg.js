@@ -3,6 +3,7 @@
 const config = require('./config');
 const core = require('./mese.core');
 const access = require('./server.tgaccess');
+const tgmeseReport = require('./tgmese.report');
 
 const games = access.games;
 const userGames = access.userGames;
