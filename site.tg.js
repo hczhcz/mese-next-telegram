@@ -1,7 +1,6 @@
 'use strict';
 
 const config = require('./config');
-const core = require('./mese.core'); // TODO: remove
 const access = require('./server.tgaccess');
 
 const gathers = access.gathers;
@@ -248,37 +247,13 @@ module.exports = (bot) => {
                         throw 1; // never reach
                     }
 
+                    access.engines.mese(game);
+
                     bot.sendMessage(
                         i,
                         'Game started\n'
                         + '\n'
                         + nameList(game.users)
-                    );
-
-                    const allocator = (period) => {
-                        return (gameData) => {
-                            if (period < config.tgmeseSettings.length) {
-                                core.alloc(
-                                    gameData,
-                                    config.tgmeseSettings[i],
-                                    allocator(period + 1)
-                                );
-                            } else {
-                                game.closeDate = now + config.tgmeseCloseTimeout;
-                                game.gameData = gameData;
-
-                                game.period = 1;
-
-                                // sendAll(bot, game, i); // TODO
-                            }
-                        };
-                    };
-
-                    core.init(
-                        String(game.total),
-                        config.tgmesePreset,
-                        config.tgmeseSettings[0],
-                        allocator(1)
                     );
                 } else {
                     for (const j in gather.users) {

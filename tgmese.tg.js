@@ -8,6 +8,36 @@ const games = access.games;
 const userGames = access.userGames;
 const reports = access.reports;
 
+access.engines.mese = (game) => {
+    const now = Date.now();
+
+    const allocator = (period) => {
+        return (gameData) => {
+            if (period < config.tgmeseSettings.length) {
+                core.alloc(
+                    gameData,
+                    config.tgmeseSettings[game.chat.id],
+                    allocator(period + 1)
+                );
+            } else {
+                game.closeDate = now + config.tgmeseCloseTimeout;
+                game.gameData = gameData;
+
+                game.period = 1;
+
+                // sendAll(bot, game, i); // TODO
+            }
+        };
+    };
+
+    core.init(
+        String(game.total),
+        config.tgmesePreset,
+        config.tgmeseSettings[0],
+        allocator(1)
+    );
+};
+
 const sendAll = (bot, game, i) => {
     core.printPublic(game.gameData, (report) => {
         reports[i] = report;
