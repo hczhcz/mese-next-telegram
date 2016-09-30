@@ -107,13 +107,13 @@ module.exports = (bot) => {
             }, () => {
                 bot.sendMessage(
                     msg.chat.id,
-                    'Fail: Please start @' + config.tgBot + '\n',
+                    'Fail: Please start @' + bot.me.username + '\n',
                     {
                         reply_to_message_id: msg.message_id,
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: 'Start',
-                                url: 'https://telegram.me/' + config.tgBot,
+                                url: 'https://telegram.me/' + bot.me.username,
                             }]],
                         },
                     }

@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-    tgBot: 'mese_bot',
     tgInterval: 1000,
     tgGatherTimeout: 600 * 1000,
     tgReadyTimeout: 30 * 1000,

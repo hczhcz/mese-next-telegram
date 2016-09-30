@@ -11,25 +11,29 @@ module.exports = (interval, handlers) => {
         },
     });
 
-    const timerEvents = [];
+    bot.getMe().then((info) => {
+        bot.me = info;
 
-    const timer = () => {
-        const now = Date.now();
+        const timerEvents = [];
 
-        for (const event of timerEvents) {
-            event(now);
+        const timer = () => {
+            const now = Date.now();
+
+            for (const event of timerEvents) {
+                event(now);
+            }
+
+            setTimeout(timer, interval);
+        };
+
+        setTimeout(timer, interval); // TODO: sync with poll?
+
+        bot.onTimer = (event) => {
+            timerEvents.push(event);
+        };
+
+        for (const handler of handlers) {
+            handler(bot);
         }
-
-        setTimeout(timer, interval);
-    };
-
-    setTimeout(timer, interval); // TODO: sync with poll?
-
-    bot.onTimer = (event) => {
-        timerEvents.push(event);
-    };
-
-    for (const handler of handlers) {
-        handler(bot);
-    }
+    });
 };
