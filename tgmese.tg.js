@@ -9,66 +9,100 @@ const games = access.games;
 const userGames = access.userGames;
 const reports = access.reports;
 
-access.engines.mese = (game) => {
-    const now = Date.now();
+module.exports = (bot) => {
+    const sendAll = (now, game, i) => {
+        core.printPublic(game.gameData, (report) => {
+            reports[i] = {
+                report: report,
+                date: now + config.tgmeseReportTimeout,
+            };
 
-    const allocator = (period) => {
-        return (gameData) => {
-            if (period < config.tgmeseSettings.length) {
-                core.alloc(
-                    gameData,
-                    config.tgmeseSettings[game.chat.id],
-                    allocator(period + 1)
-                );
-            } else {
-                game.closeDate = now + config.tgmeseCloseTimeout;
-                game.gameData = gameData;
+            const puList = [];
 
-                game.period = 1;
-
-                // sendAll(bot, game, i); // TODO
+            for (const item of tgmeseReport.list(reports[i].report)) {
+                puList.push([{
+                    text: item,
+                    callback_data: item,
+                }]);
             }
-        };
-    };
-
-    core.init(
-        String(game.total),
-        config.tgmesePreset,
-        config.tgmeseSettings[0],
-        allocator(1)
-    );
-};
-
-const sendAll = (bot, game, i) => {
-    core.printPublic(game.gameData, (report) => {
-        reports[i] = report;
-
-        bot.sendMessage(
-            i,
-            JSON.stringify(reports[i]) // TODO
-        );
-    });
-
-    for (const j in game.users) {
-        core.printPlayer(game.gameData, game.users[j].index, (report) => {
-            reports[j] = report;
 
             bot.sendMessage(
-                j,
-                JSON.stringify(reports[j]) // TODO
-            ).then(() => {
-                //
-            }, () => {
-                //
+                i,
+                tgmeseReport.content(reports[i].report, 'main'),
+                {
+                    reply_markup: {
+                        inline_keyboard: puList,
+                    },
+                }
+            ).then((msgSent) => {
+                reports[i].msg = msgSent;
             });
         });
-    }
-};
 
-module.exports = (bot) => {
-    bot.onText(/([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)$/, (msg, match) => {
+        for (const j in game.users) {
+            core.printPlayer(game.gameData, game.users[j].index, (report) => {
+                reports[i] = {
+                    report: report,
+                    date: now + config.tgmeseReportTimeout,
+                };
+
+                const prList = [];
+
+                for (const item of tgmeseReport.list(reports[i].report)) {
+                    prList.push([{
+                        text: item,
+                        callback_data: item,
+                    }]);
+                }
+
+                bot.sendMessage(
+                    j,
+                    tgmeseReport.content(reports[j].report, 'main'),
+                    {
+                        reply_markup: {
+                            inline_keyboard: prList,
+                        },
+                    }
+                ).then((msgSent) => {
+                    reports[i].msg = msgSent;
+                }, () => {
+                    //
+                });
+            });
+        }
+    };
+
+    access.engines.mese = (game) => {
         const now = Date.now();
 
+        const allocator = (period) => {
+            return (gameData) => {
+                if (period < config.tgmeseSettings.length) {
+                    core.alloc(
+                        gameData,
+                        config.tgmeseSettings[game.chat.id],
+                        allocator(period + 1)
+                    );
+                } else {
+                    game.closeDate = now + config.tgmeseCloseTimeout;
+                    game.gameData = gameData;
+
+                    game.period = 1;
+
+                    sendAll(now, game, game.chat.id); // TODO
+                }
+            };
+        };
+
+        core.init(
+            String(game.total),
+            config.tgmesePreset,
+            config.tgmeseSettings[0],
+            allocator(1)
+        );
+    };
+
+    bot.onText(/([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)$/, (msg, match) => {
         if (userGames[msg.from.id]) {
             const game = userGames[msg.from.id];
 
@@ -138,6 +172,17 @@ module.exports = (bot) => {
         }
     });
 
+    bot.on('callback_query', (msg) => {
+        if (userGames[msg.from.id]) {
+            bot.editMessageText(
+                tgmeseReport.content(reports[msg.from.id].report),
+                {
+                    message_id: reports[msg.from.id].msg.id,
+                }
+            );
+        }
+    });
+
     bot.onTimer((now) => {
         for (const i in games) {
             const game = games[i];
@@ -165,7 +210,7 @@ module.exports = (bot) => {
                         );
                     }
 
-                    sendAll(bot, game, i);
+                    sendAll(now, game, i);
                 });
             }
         }
