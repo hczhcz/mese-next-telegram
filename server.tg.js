@@ -3,7 +3,7 @@
 const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 
-module.exports = (interval, timerHandler, handlers) => {
+module.exports = (interval, handlers) => {
     const token = String(fs.readFileSync('token'));
     const bot = new TelegramBot(token, {
         polling: {
@@ -11,15 +11,23 @@ module.exports = (interval, timerHandler, handlers) => {
         },
     });
 
+    const timerEvents = [];
+
     const timer = () => {
         const now = Date.now();
 
-        timerHandler(bot, now);
+        for (const event of timerEvents) {
+            event(now);
+        }
 
         setTimeout(timer, interval);
     };
 
     setTimeout(timer, interval); // TODO: sync with poll?
+
+    bot.onTimer = (event) => {
+        timerEvents.push(event);
+    };
 
     for (const handler of handlers) {
         handler(bot);

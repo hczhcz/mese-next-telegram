@@ -1,7 +1,37 @@
 'use strict';
 
 const config = require('./config');
+const core = require('./mese.core'); // TODO: remove
 const access = require('./server.tgaccess');
+
+const gathers = access.gathers;
+const games = access.games;
+const userGames = access.userGames;
+
+const readyTime = (ready, date, now) => {
+    if (ready) {
+        return 'Game will start in: '
+            + Math.round((date - now) / 1000) + ' seconds\n';
+    } else {
+        return 'Press /ready to start the game\n'
+            + 'Or game will expire in: '
+            + Math.round((date - now) / 1000) + ' seconds\n';
+    }
+};
+
+const nameList = (users) => {
+    let result = 'Players:\n';
+
+    for (const j in users) {
+        if (users[j].username) {
+            result += '@' + users[j].username + '\n';
+        } else {
+            result += users[j].first_name + ' ' + users[j].last_name + '\n';
+        }
+    }
+
+    return result;
+};
 
 module.exports = (bot) => {
     bot.onText(/\/join/, (msg, match) => {
@@ -90,7 +120,7 @@ module.exports = (bot) => {
                 );
             });
         }
-    };
+    });
 
     bot.onText(/\/flee/, (msg, match) => {
         const now = Date.now();
@@ -150,7 +180,7 @@ module.exports = (bot) => {
                 }
             );
         }
-    };
+    });
 
     bot.onText(/\/ready/, (msg, match) => {
         const now = Date.now();
@@ -195,5 +225,74 @@ module.exports = (bot) => {
                 }
             );
         }
-    };
+    });
+
+    bot.onTimer((now) => {
+        for (const i in gathers) {
+            const gather = gathers[i];
+
+            if (gather.date < now) {
+                delete gathers[i];
+
+                if (gather.ready) {
+                    const game = games[i] = gather;
+
+                    let total = 0;
+
+                    for (const j in game.users) {
+                        game.users[j].index = total;
+                        total += 1;
+                    }
+
+                    if (total !== game.total) {
+                        throw 1; // never reach
+                    }
+
+                    bot.sendMessage(
+                        i,
+                        'Game started\n'
+                        + '\n'
+                        + nameList(game.users)
+                    );
+
+                    const allocator = (period) => {
+                        return (gameData) => {
+                            if (period < config.tgmeseSettings.length) {
+                                core.alloc(
+                                    gameData,
+                                    config.tgmeseSettings[i],
+                                    allocator(period + 1)
+                                );
+                            } else {
+                                game.closeDate = now + config.tgmeseCloseTimeout;
+                                game.gameData = gameData;
+
+                                game.period = 1;
+
+                                // sendAll(bot, game, i); // TODO
+                            }
+                        };
+                    };
+
+                    core.init(
+                        String(game.total),
+                        config.tgmesePreset,
+                        config.tgmeseSettings[0],
+                        allocator(1)
+                    );
+                } else {
+                    for (const j in gather.users) {
+                        delete userGames[j];
+                    }
+
+                    bot.sendMessage(
+                        i,
+                        'Game expired\n'
+                        + '\n'
+                        + 'Please /join the game again'
+                    );
+                }
+            }
+        }
+    });
 };
