@@ -22,10 +22,6 @@ module.exports = (interval, timerHandler, handlers) => {
     setTimeout(timer, interval); // TODO: sync with poll?
 
     for (const handler of handlers) {
-        bot.onText(handler[0], (msg, match) => {
-            const now = Date.now();
-
-            handler[1](bot, msg, match, now);
-        });
+        handler(bot);
     }
 };
