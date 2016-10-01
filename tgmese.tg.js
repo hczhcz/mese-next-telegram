@@ -17,26 +17,13 @@ module.exports = (bot) => {
                 date: now + config.tgmeseReportTimeout,
             };
 
-            const puList = [];
-
-            for (const item of tgmeseReport.list(reports[i].report)) {
-                puList.push([{
-                    text: item,
-                    callback_data: item,
-                }]);
-            }
-
             bot.sendMessage(
                 i,
-                tgmeseReport.content(reports[i].report, 'main'),
-                {
-                    reply_markup: {
-                        inline_keyboard: puList,
-                    },
-                }
-            ).then((msgSent) => {
-                reports[i].msg = msgSent;
-            });
+                tgmeseReport.content(
+                    reports[i].report,
+                    'main'
+                )
+            );
         });
 
         for (const j in game.users) {
@@ -46,10 +33,10 @@ module.exports = (bot) => {
                     date: now + config.tgmeseReportTimeout,
                 };
 
-                const prList = [];
+                const list = [];
 
                 for (const item of tgmeseReport.list(reports[i].report)) {
-                    prList.push([{
+                    list.push([{
                         text: item,
                         callback_data: item,
                     }]);
@@ -57,17 +44,16 @@ module.exports = (bot) => {
 
                 bot.sendMessage(
                     j,
-                    tgmeseReport.content(reports[j].report, 'main'),
+                    tgmeseReport.content(
+                        reports[j].report,
+                        'main'
+                    ),
                     {
                         reply_markup: {
-                            inline_keyboard: prList,
+                            inline_keyboard: list,
                         },
                     }
-                ).then((msgSent) => {
-                    reports[i].msg = msgSent;
-                }, () => {
-                    //
-                });
+                );
             });
         }
     };
@@ -172,13 +158,14 @@ module.exports = (bot) => {
         }
     });
 
-    bot.on('callback_query', (msg) => {
-        if (userGames[msg.from.id]) {
-            bot.editMessageText(
-                tgmeseReport.content(reports[msg.from.id].report),
-                {
-                    message_id: reports[msg.from.id].msg.id,
-                }
+    bot.on('callback_query', (query) => {
+        if (userGames[query.from.id]) {
+            bot.sendMessage(
+                query.from.id,
+                tgmeseReport.content(
+                    reports[query.from.id].report,
+                    query.data
+                )
             );
         }
     });
