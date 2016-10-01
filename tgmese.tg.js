@@ -119,11 +119,11 @@ module.exports = (bot) => {
                             msg.chat.id,
                             'OK: Decision accepted\n'
                             + '\n'
-                            + 'Pr ' + match[1] + ' '
-                            + 'Pd ' + match[2] + ' '
-                            + 'Mk ' + match[3] + ' '
-                            + 'CI ' + match[4] + ' '
-                            + 'RD ' + match[5] + '\n',
+                            + 'Price - ' + match[1] + '\n'
+                            + 'Prod - ' + match[2] + '\n'
+                            + 'Marketing - ' + match[3] + '\n'
+                            + 'Investment - ' + match[4] + '\n'
+                            + 'R & D - ' + match[5] + '\n',
                             {
                                 reply_to_message_id: msg.message_id,
                             }

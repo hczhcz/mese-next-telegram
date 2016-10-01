@@ -33,7 +33,7 @@ const nameList = (users) => {
 };
 
 module.exports = (bot) => {
-    bot.onText(/^\/join/, (msg, match) => {
+    bot.onText(/^\/join(?!\w)/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -121,7 +121,7 @@ module.exports = (bot) => {
         }
     });
 
-    bot.onText(/^\/flee/, (msg, match) => {
+    bot.onText(/^\/flee(?!\w)/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -181,7 +181,7 @@ module.exports = (bot) => {
         }
     });
 
-    bot.onText(/^\/ready/, (msg, match) => {
+    bot.onText(/^\/ready(?!\w)/, (msg, match) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
