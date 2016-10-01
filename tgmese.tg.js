@@ -17,21 +17,23 @@ module.exports = (bot) => {
                 date: now + config.tgmeseReportTimeout,
             };
 
-            bot.sendMessage(
-                i,
-                tgmeseReport(
-                    reports[i].report,
-                    'Main'
-                )
-            );
+            if (game.total >= 1 || !game.users[i]) {
+                bot.sendMessage(
+                    i,
+                    tgmeseReport(
+                        reports[i].report,
+                        'Main'
+                    )
+                );
 
-            bot.sendMessage(
-                i,
-                tgmeseReport(
-                    reports[i].report,
-                    'Industry Average'
-                )
-            );
+                bot.sendMessage(
+                    i,
+                    tgmeseReport(
+                        reports[i].report,
+                        'Industry Average'
+                    )
+                );
+            }
         });
 
         for (const j in game.users) {

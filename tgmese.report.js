@@ -66,6 +66,17 @@ module.exports = (report, section) => {
             part = 'mpi';
             write('Average MPI', 'average_mpi');
 
+            title += '\n';
+
+            if (report.next_settings) {
+                title += 'Please submit your decision as:\n'
+                    + '<P> <Pd> <Mk> <CI> <RD>\n'
+                    + 'Example:\n'
+                    + '60 500 10000 10000 10000\n';
+            } else {
+                title += 'Game finished\n';
+            }
+
             break;
         }
         case 'Before Period': {
