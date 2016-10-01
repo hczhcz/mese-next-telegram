@@ -53,13 +53,19 @@ module.exports = (bot) => {
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: 'Before Period',
-                                callback_data: 'Before Period',
+                                callback_data: JSON.stringify(
+                                    ['Before Period', reports[j].date]
+                                ),
                             }], [{
                                 text: 'After Period',
-                                callback_data: 'After Period',
+                                callback_data: JSON.stringify(
+                                    ['After Period', reports[j].date]
+                                ),
                             }], [{
                                 text: 'Industry Average',
-                                callback_data: 'Industry Average',
+                                callback_data: JSON.stringify(
+                                    ['Industry Average', reports[j].date]
+                                ),
                             }]],
                         },
                     }
@@ -169,12 +175,17 @@ module.exports = (bot) => {
     });
 
     bot.on('callback_query', (query) => {
-        if (userGames[query.from.id]) {
+        const data = JSON.parse(query.data);
+
+        if (
+            reports[query.from.id]
+            && reports[query.from.id].date === data[1]
+        ) {
             bot.sendMessage(
                 query.from.id,
                 tgmeseReport(
                     reports[query.from.id].report,
-                    query.data
+                    data[0]
                 )
             );
         }
@@ -210,6 +221,12 @@ module.exports = (bot) => {
 
                     sendAll(now, game, i);
                 });
+            }
+        }
+
+        for (const i in reports) {
+            if (reports[i].date < now) {
+                delete reports[i];
             }
         }
     });

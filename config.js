@@ -11,5 +11,5 @@ module.exports = {
     tgmesePreset: 'modern',
     tgmeseSettings: [{}, {}, {}, {}, {}, {}, {}, {}],
     tgmeseCloseTimeout: 300 * 1000,
-    tgmeseReportTimeout: 7200 * 1000, // TODO
+    tgmeseReportTimeout: 7200 * 1000,
 };
