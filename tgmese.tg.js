@@ -19,38 +19,46 @@ module.exports = (bot) => {
 
             bot.sendMessage(
                 i,
-                tgmeseReport.content(
+                tgmeseReport(
                     reports[i].report,
-                    'main'
+                    'Main'
+                )
+            );
+
+            bot.sendMessage(
+                i,
+                tgmeseReport(
+                    reports[i].report,
+                    'Industry Average'
                 )
             );
         });
 
         for (const j in game.users) {
             core.printPlayer(game.gameData, game.users[j].index, (report) => {
-                reports[i] = {
+                reports[j] = {
                     report: report,
                     date: now + config.tgmeseReportTimeout,
                 };
 
-                const list = [];
-
-                for (const item of tgmeseReport.list(reports[i].report)) {
-                    list.push([{
-                        text: item,
-                        callback_data: item,
-                    }]);
-                }
-
                 bot.sendMessage(
                     j,
-                    tgmeseReport.content(
+                    tgmeseReport(
                         reports[j].report,
-                        'main'
+                        'Main'
                     ),
                     {
                         reply_markup: {
-                            inline_keyboard: list,
+                            inline_keyboard: [[{
+                                text: 'Before Period',
+                                callback_data: 'Before Period',
+                            }], [{
+                                text: 'After Period',
+                                callback_data: 'After Period',
+                            }], [{
+                                text: 'Industry Average',
+                                callback_data: 'Industry Average',
+                            }]],
                         },
                     }
                 );
@@ -162,7 +170,7 @@ module.exports = (bot) => {
         if (userGames[query.from.id]) {
             bot.sendMessage(
                 query.from.id,
-                tgmeseReport.content(
+                tgmeseReport(
                     reports[query.from.id].report,
                     query.data
                 )
@@ -182,6 +190,7 @@ module.exports = (bot) => {
                     game.gameData = gameData;
 
                     game.period += 1;
+
                     if (game.period === config.tgmeseSettings.length) {
                         delete games[i];
 
