@@ -41,7 +41,7 @@ module.exports = (bot) => {
         if (games[msg.chat.id]) {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game is running now\n',
+                'Failed: Game is running now\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
@@ -49,7 +49,7 @@ module.exports = (bot) => {
         } else if (userGames[msg.from.id]) {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: You are in a game now\n',
+                'Failed: You are in a game now\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
@@ -110,7 +110,8 @@ module.exports = (bot) => {
             }, () => {
                 bot.sendMessage(
                     msg.chat.id,
-                    'Fail: Please start @' + bot.me.username + '\n',
+                    'Failed: Please start @' + bot.me.username + '\n'
+                    + 'and join again\n',
                     {
                         reply_to_message_id: msg.message_id,
                         reply_markup: {
@@ -131,7 +132,7 @@ module.exports = (bot) => {
         if (games[msg.chat.id]) {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game is running now\n',
+                'Failed: Game is running now\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
@@ -175,7 +176,7 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game does not exist\n'
+                'Failed: Game does not exist\n'
                 + '\n'
                 + 'Press /join to start a new game\n',
                 {
@@ -191,7 +192,7 @@ module.exports = (bot) => {
         if (games[msg.chat.id]) {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game is running now\n',
+                'Failed: Game is running now\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
@@ -221,7 +222,7 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game does not exist\n'
+                'Failed: Game does not exist\n'
                 + '\n'
                 + 'Press /join to start a new game\n',
                 {

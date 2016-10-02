@@ -146,7 +146,7 @@ module.exports = (bot) => {
 
                         bot.sendMessage(
                             msg.chat.id,
-                            'OK: Decision accepted\n'
+                            'OK: Decision is accepted\n'
                             + '\n'
                             + 'Price - ' + match[1] + '\n'
                             + 'Prod - ' + match[2] + '\n'
@@ -161,7 +161,7 @@ module.exports = (bot) => {
                         // TODO
                         bot.sendMessage(
                             msg.chat.id,
-                            'Fail: System error\n'
+                            'Failed: System error\n'
                             + '\n'
                             + 'Please submit again\n',
                             {
@@ -177,7 +177,7 @@ module.exports = (bot) => {
 
                     bot.sendMessage(
                         msg.chat.id,
-                        'Fail: Decision declined\n',
+                        'Failed: Decision is declined\n',
                         {
                             reply_to_message_id: msg.message_id,
                         }
@@ -187,7 +187,7 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.chat.id,
-                'Fail: Game is not running now\n',
+                'Failed: Game is not running now\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
