@@ -100,17 +100,6 @@ module.exports = (report, section) => {
                     + ', ' + target.data.mpi.mpi[i] + '\n';
             }
 
-            title += '\n';
-
-            if (report.next_settings) {
-                title += 'Please submit your decision as:\n'
-                    + '<P> <Pd> <Mk> <CI> <RD>\n'
-                    + 'Example:\n'
-                    + '65 500 5000 5000 5000\n';
-            } else {
-                title += 'Game finished\n';
-            }
-
             break;
         }
         case 'Before Period': {

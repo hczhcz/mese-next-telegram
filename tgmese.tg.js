@@ -89,6 +89,28 @@ module.exports = (bot) => {
                         },
                     }
                 );
+
+                setTimeout(() => {
+                    if (reports[j].report.next_settings) {
+                        bot.sendMessage(
+                            j,
+                            'Please submit:\n'
+                                + 'P Pd Mk CI RD\n'
+                                + 'Example:\n'
+                                + '65 500 5000 5000 5000\n',
+                            {
+                                reply_markup: {
+                                    force_reply: true,
+                                },
+                            }
+                        );
+                    } else {
+                        bot.sendMessage(
+                            j,
+                            'Game finished\n'
+                        );
+                    }
+                }, config.tgInterval);
             });
         }
     };
