@@ -10,11 +10,13 @@ const userGames = access.userGames;
 const readyTime = (ready, date, now) => {
     if (ready) {
         return 'Game will start in: '
-            + Math.round((date - now) / 1000) + ' seconds\n';
+            + Math.round((date - now) / 1000)
+            + ' seconds\n';
     } else {
         return 'Press /ready to start the game\n'
             + 'Or game will expire in: '
-            + Math.round((date - now) / 1000) + ' seconds\n';
+            + Math.round((date - now) / 1000)
+            + ' seconds\n';
     }
 };
 
@@ -83,6 +85,8 @@ module.exports = (bot) => {
                         users: {},
                         total: 0,
                         date: now + config.tgGatherTimeout,
+                        remind: now + config.tgGatherTimeout
+                            - config.tgGatherRemind,
                     };
 
                     gather.users[msg.from.id] = msg.from;
@@ -198,6 +202,7 @@ module.exports = (bot) => {
             if (!gather.ready) {
                 gather.ready = true;
                 gather.date = now + config.tgReadyTimeout;
+                delete gather.remind;
             }
 
             bot.sendMessage(
@@ -229,6 +234,19 @@ module.exports = (bot) => {
     bot.onTimer((now) => {
         for (const i in gathers) {
             const gather = gathers[i];
+
+            if (gather.remind && gather.remind < now) {
+                delete gather.remind;
+
+                bot.sendMessage(
+                    i,
+                    readyTime(gather.ready, gather.date, now)
+                    + '\n'
+                    + nameList(gather.users)
+                    + '\n'
+                    + '/join /flee\n'
+                );
+            }
 
             if (gather.date < now) {
                 delete gathers[i];

@@ -106,6 +106,8 @@ module.exports = (bot) => {
                     );
                 } else {
                     game.closeDate = now + config.tgmeseCloseTimeout;
+                    game.closeRemind = now + config.tgmeseCloseTimeout
+                        - config.tgmeseCloseRemind;
                     game.gameData = gameData;
 
                     game.period = 1;
@@ -214,11 +216,33 @@ module.exports = (bot) => {
         for (const i in games) {
             const game = games[i];
 
+            if (game.closeRemind && game.closeRemind < now) {
+                delete game.closeRemind;
+
+                bot.sendMessage(
+                    i,
+                    'Period will end in:'
+                    + Math.round((game.closeDate - now) / 1000)
+                    + ' seconds\n'
+                );
+
+                for (const j in game.users) {
+                    bot.sendMessage(
+                        i,
+                        'Period will end in:'
+                        + Math.round((game.closeDate - now) / 1000)
+                        + ' seconds\n'
+                    );
+                }
+            }
+
             if (game.closeDate && game.closeDate < now) {
                 delete game.closeDate;
 
                 core.closeForce(game.gameData, (gameData) => {
                     game.closeDate = now + config.tgmeseCloseTimeout;
+                    game.closeRemind = now + config.tgmeseCloseTimeout
+                        - config.tgmeseCloseRemind;
                     game.gameData = gameData;
 
                     game.period += 1;

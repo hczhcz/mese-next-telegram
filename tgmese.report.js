@@ -22,7 +22,7 @@ module.exports = (report, section) => {
                 && JSON.stringify(report.next_settings)
                     !== JSON.stringify(report.settings)
             ) {
-                title += 'Setting changes in next period:\n';
+                title += 'Setting changes:\n';
 
                 const writeSetting = (name, item) => {
                     if (
