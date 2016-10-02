@@ -69,6 +69,39 @@ module.exports = (report, section) => {
 
             title += '\n';
 
+            target = report.data_public;
+
+            title += 'Price and sales:\n';
+
+            for (let i = 0; i < report.player_count; i += 1) {
+                title += report.players[i]
+                    + ' - ' + target.decisions.price[i]
+                    + ' * ' + target.data.orders.sold[i]
+                    + ' = ' + target.data.balance.sales[i] + '\n';
+            }
+
+            title += '\n';
+
+            title += 'Cost and profit:\n';
+
+            for (let i = 0; i < report.player_count; i += 1) {
+                title += report.players[i]
+                    + ' - ' + target.data.balance.cost_before_tax[i]
+                    + ', ' + target.data.balance.profit[i] + '\n';
+            }
+
+            title += '\n';
+
+            title += 'Retained earning and MPI:\n';
+
+            for (let i = 0; i < report.player_count; i += 1) {
+                title += report.players[i]
+                    + ' - ' + target.data.balance.retern[i]
+                    + ', ' + target.data.mpi.mpi[i] + '\n';
+            }
+
+            title += '\n';
+
             if (report.next_settings) {
                 title += 'Please submit your decision as:\n'
                     + '<P> <Pd> <Mk> <CI> <RD>\n'

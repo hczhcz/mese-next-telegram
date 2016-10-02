@@ -11,7 +11,24 @@ const reports = access.reports;
 
 module.exports = (bot) => {
     const sendAll = (now, game, i) => {
+        const setPlayers = (report) => {
+            report.players = [];
+
+            for (const j in game.users) {
+                const user = game.users[j];
+
+                if (user.username) {
+                    report.players[user.index] = '@' + user.username;
+                } else {
+                    report.players[user.index] = user.first_name
+                        + ' ' + user.last_name;
+                }
+            }
+        };
+
         core.printPublic(game.gameData, (report) => {
+            setPlayers(report);
+
             reports[i] = {
                 report: report,
                 date: now + config.tgmeseReportTimeout,
@@ -38,6 +55,8 @@ module.exports = (bot) => {
 
         for (const j in game.users) {
             core.printPlayer(game.gameData, game.users[j].index, (report) => {
+                setPlayers(report);
+
                 reports[j] = {
                     report: report,
                     date: now + config.tgmeseReportTimeout,
