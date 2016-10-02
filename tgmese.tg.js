@@ -171,9 +171,9 @@ module.exports = (bot) => {
                     }
                 },
                 (gameData) => {
-                    if (game.gameData === oldData) {
-                        game.gameData = gameData;
-                    }
+                    // if (game.gameData === oldData) {
+                    //     game.gameData = gameData;
+                    // }
 
                     bot.sendMessage(
                         msg.chat.id,
@@ -228,7 +228,7 @@ module.exports = (bot) => {
 
                 for (const j in game.users) {
                     bot.sendMessage(
-                        i,
+                        j,
                         'Period will end in:'
                         + Math.round((game.closeDate - now) / 1000)
                         + ' seconds\n'
