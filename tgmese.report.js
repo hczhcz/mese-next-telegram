@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports = (report, section) => {
-    let title = 'Period ' + report.now_period
+    let title = 'Period ' + (report.now_period - 1)
         + ' - ' + section + '\n'
         + '\n';
 
-    let target;
-    let part;
+    let target = {}; // notice: unnecessary init
+    let part = ''; // notice: unnecessary init
 
     const write = (name, item) => {
         title += name
@@ -17,10 +17,11 @@ module.exports = (report, section) => {
 
     switch (section) {
         case 'Main': {
-            if (report.next_settings && (
-                JSON.stringify(report.next_settings)
-                !== JSON.stringify(report.settings)
-            )) {
+            if (
+                report.next_settings
+                && JSON.stringify(report.next_settings)
+                    !== JSON.stringify(report.settings)
+            ) {
                 title += 'Setting changes in next period:\n';
 
                 const writeSetting = (name, item) => {
@@ -72,7 +73,7 @@ module.exports = (report, section) => {
                 title += 'Please submit your decision as:\n'
                     + '<P> <Pd> <Mk> <CI> <RD>\n'
                     + 'Example:\n'
-                    + '60 500 10000 10000 10000\n';
+                    + '65 500 5000 5000 5000\n';
             } else {
                 title += 'Game finished\n';
             }
