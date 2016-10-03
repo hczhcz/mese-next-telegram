@@ -13,8 +13,6 @@ module.exports = (report, section) => {
             + ' - ' + target[part][item] + '\n';
     };
 
-    // TODO: report.status
-
     switch (section) {
         case 'Main': {
             if (

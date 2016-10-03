@@ -26,92 +26,97 @@ module.exports = (bot) => {
             }
         };
 
-        core.printPublic(game.gameData, (report) => {
-            setPlayers(report);
-
-            reports[i] = {
-                report: report,
-                date: now + config.tgmeseReportTimeout,
-            };
-
-            if (game.total >= 1 || !game.users[i]) {
-                bot.sendMessage(
-                    i,
-                    tgmeseReport(
-                        reports[i].report,
-                        'Main'
-                    )
-                );
-
-                bot.sendMessage(
-                    i,
-                    tgmeseReport(
-                        reports[i].report,
-                        'Industry Average'
-                    )
-                );
-            }
-        });
-
-        for (const j in game.users) {
-            core.printPlayer(game.gameData, game.users[j].index, (report) => {
+        core.printPublic(
+            game.gameData,
+            (report) => {
                 setPlayers(report);
 
-                reports[j] = {
+                reports[i] = {
                     report: report,
                     date: now + config.tgmeseReportTimeout,
                 };
 
-                bot.sendMessage(
-                    j,
-                    tgmeseReport(
-                        reports[j].report,
-                        'Main'
-                    ),
-                    {
-                        reply_markup: {
-                            inline_keyboard: [[{
-                                text: 'Before Period',
-                                callback_data: JSON.stringify(
-                                    ['Before Period', reports[j].date]
-                                ),
-                            }], [{
-                                text: 'After Period',
-                                callback_data: JSON.stringify(
-                                    ['After Period', reports[j].date]
-                                ),
-                            }], [{
-                                text: 'Industry Average',
-                                callback_data: JSON.stringify(
-                                    ['Industry Average', reports[j].date]
-                                ),
-                            }]],
-                        },
-                    }
-                );
+                if (game.total >= 1 || !game.users[i]) {
+                    bot.sendMessage(
+                        i,
+                        tgmeseReport(
+                            reports[i].report,
+                            'Main'
+                        )
+                    ).then(() => {
+                        bot.sendMessage(
+                            i,
+                            tgmeseReport(
+                                reports[i].report,
+                                'Industry Average'
+                            )
+                        );
+                    });
+                }
+            }
+        );
 
-                setTimeout(() => {
-                    if (reports[j].report.next_settings) {
-                        bot.sendMessage(
-                            j,
-                            'Please submit:\n'
-                                + 'P Pd Mk CI RD\n'
-                                + 'Example:\n'
-                                + '65 500 5000 5000 5000\n',
-                            {
-                                reply_markup: {
-                                    force_reply: true,
-                                },
-                            }
-                        );
-                    } else {
-                        bot.sendMessage(
-                            j,
-                            'Game finished\n'
-                        );
-                    }
-                }, config.tgInterval);
-            });
+        for (const j in game.users) {
+            core.printPlayer(
+                game.gameData,
+                game.users[j].index,
+                (report) => {
+                    setPlayers(report);
+
+                    reports[j] = {
+                        report: report,
+                        date: now + config.tgmeseReportTimeout,
+                    };
+
+                    bot.sendMessage(
+                        j,
+                        tgmeseReport(
+                            reports[j].report,
+                            'Main'
+                        ),
+                        {
+                            reply_markup: {
+                                inline_keyboard: [[{
+                                    text: 'Before Period',
+                                    callback_data: JSON.stringify(
+                                        ['Before Period', reports[j].date]
+                                    ),
+                                }], [{
+                                    text: 'After Period',
+                                    callback_data: JSON.stringify(
+                                        ['After Period', reports[j].date]
+                                    ),
+                                }], [{
+                                    text: 'Industry Average',
+                                    callback_data: JSON.stringify(
+                                        ['Industry Average', reports[j].date]
+                                    ),
+                                }]],
+                            },
+                        }
+                    ).then(() => {
+                        if (reports[j].report.next_settings) {
+                            bot.sendMessage(
+                                j,
+                                'Please submit:\n'
+                                    + 'P Pd Mk CI RD\n'
+                                    + 'Example:\n'
+                                    + '65 500 5000 5000 5000\n',
+                                {
+                                    reply_markup: {
+                                        force_reply: true,
+                                    },
+                                }
+                            );
+                        } else {
+                            bot.sendMessage(
+                                j,
+                                'Game finished\n'
+                            );
+                        }
+                    });
+                }
+            );
         }
     };
 
@@ -261,31 +266,34 @@ module.exports = (bot) => {
             if (game.closeDate && game.closeDate < now) {
                 delete game.closeDate;
 
-                core.closeForce(game.gameData, (gameData) => {
-                    game.closeDate = now + config.tgmeseCloseTimeout;
-                    game.closeRemind = now + config.tgmeseCloseTimeout
-                        - config.tgmeseCloseRemind;
-                    game.gameData = gameData;
+                core.closeForce(
+                    game.gameData,
+                    (gameData) => {
+                        game.closeDate = now + config.tgmeseCloseTimeout;
+                        game.closeRemind = now + config.tgmeseCloseTimeout
+                            - config.tgmeseCloseRemind;
+                        game.gameData = gameData;
 
-                    game.period += 1;
+                        game.period += 1;
 
-                    if (game.period === config.tgmeseSettings.length) {
-                        delete games[i];
+                        if (game.period === config.tgmeseSettings.length) {
+                            delete games[i];
 
-                        for (const j in game.users) {
-                            delete userGames[j];
+                            for (const j in game.users) {
+                                delete userGames[j];
+                            }
+
+                            bot.sendMessage(
+                                i,
+                                'Game finished\n'
+                                + '\n'
+                                + 'Press /join to start a new game'
+                            );
                         }
 
-                        bot.sendMessage(
-                            i,
-                            'Game finished\n'
-                            + '\n'
-                            + 'Press /join to start a new game'
-                        );
+                        sendAll(now, game, i);
                     }
-
-                    sendAll(now, game, i);
-                });
+                );
             }
         }
 
