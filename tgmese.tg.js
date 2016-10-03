@@ -108,6 +108,23 @@ module.exports = (bot) => {
                             'Main'
                         )
                     ).then(() => {
+                        const buttons = [[{
+                            text: 'Before Period',
+                            callback_data: JSON.stringify(
+                                ['Before Period', reports[j].date]
+                            ),
+                        }], [{
+                            text: 'After Period',
+                            callback_data: JSON.stringify(
+                                ['After Period', reports[j].date]
+                            ),
+                        }], [{
+                            text: 'Industry Average',
+                            callback_data: JSON.stringify(
+                                ['Industry Average', reports[j].date]
+                            ),
+                        }]];
+
                         bot.sendMessage(
                             i,
                             tgmeseReport(
@@ -116,22 +133,7 @@ module.exports = (bot) => {
                             ),
                             {
                                 reply_markup: {
-                                    inline_keyboard: [[{
-                                        text: 'Before Period',
-                                        callback_data: JSON.stringify(
-                                            ['Before Period', reports[j].date]
-                                        ),
-                                    }], [{
-                                        text: 'After Period',
-                                        callback_data: JSON.stringify(
-                                            ['After Period', reports[j].date]
-                                        ),
-                                    }], [{
-                                        text: 'Industry Average',
-                                        callback_data: JSON.stringify(
-                                            ['Industry Average', reports[j].date]
-                                        ),
-                                    }]],
+                                    inline_keyboard: buttons,
                                 },
                             }
                         ).then(() => {

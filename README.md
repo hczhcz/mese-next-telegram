@@ -17,7 +17,7 @@ The server itself does not need installation.
 
 Before running the server, you may do the following steps:
 
-1. Clone this repository or [download it](https://github.com/hczhcz/mese-telegram/archive/master.zip);
+1. Clone this repository or [download it](https://github.com/hczhcz/mese-next-telegram/archive/master.zip);
 2. Install Node.js;
 3. Install NPM (Node.js Package Manager);
 4. Install required NPM packages: `node-telegram-bot-api`;
