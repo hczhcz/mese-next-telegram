@@ -11,6 +11,38 @@ const userGames = access.userGames;
 const reports = access.reports;
 
 module.exports = (bot) => {
+    const init = (game) => {
+        const now = Date.now();
+
+        const allocator = (period) => {
+            return (gameData) => {
+                if (period < config.tgmeseSettings.length) {
+                    core.alloc(
+                        gameData,
+                        config.tgmeseSettings[game.chat.id],
+                        allocator(period + 1)
+                    );
+                } else {
+                    game.closeDate = now + config.tgmeseCloseTimeout;
+                    game.closeRemind = now + config.tgmeseCloseTimeout
+                        - config.tgmeseCloseRemind;
+                    game.gameData = gameData;
+
+                    game.period = 1;
+
+                    sendAll(now, game, game.chat.id); // TODO
+                }
+            };
+        };
+
+        core.init(
+            String(game.total),
+            config.tgmesePreset,
+            config.tgmeseSettings[0],
+            allocator(1)
+        );
+    };
+
     const sendAll = (now, game, i) => {
         const setPlayers = (report) => {
             report.players = [];
@@ -129,38 +161,6 @@ module.exports = (bot) => {
         }
     };
 
-    access.engines.mese = (game) => {
-        const now = Date.now();
-
-        const allocator = (period) => {
-            return (gameData) => {
-                if (period < config.tgmeseSettings.length) {
-                    core.alloc(
-                        gameData,
-                        config.tgmeseSettings[game.chat.id],
-                        allocator(period + 1)
-                    );
-                } else {
-                    game.closeDate = now + config.tgmeseCloseTimeout;
-                    game.closeRemind = now + config.tgmeseCloseTimeout
-                        - config.tgmeseCloseRemind;
-                    game.gameData = gameData;
-
-                    game.period = 1;
-
-                    sendAll(now, game, game.chat.id); // TODO
-                }
-            };
-        };
-
-        core.init(
-            String(game.total),
-            config.tgmesePreset,
-            config.tgmeseSettings[0],
-            allocator(1)
-        );
-    };
-
     bot.onText(/([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)$/, (msg, match) => {
         util.log(
             (msg.chat.username || msg.chat.id)
@@ -257,6 +257,12 @@ module.exports = (bot) => {
     bot.onTimer((now) => {
         for (const i in games) {
             const game = games[i];
+
+            if (game.needInit) {
+                delete game.needInit;
+
+                init(game);
+            }
 
             if (game.closeRemind && game.closeRemind < now) {
                 delete game.closeRemind;

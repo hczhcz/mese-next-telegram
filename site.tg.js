@@ -285,7 +285,7 @@ module.exports = (bot) => {
                         throw 1; // never reach
                     }
 
-                    access.engines.mese(game);
+                    game.needInit = true;
 
                     bot.sendMessage(
                         i,
