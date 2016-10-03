@@ -57,18 +57,6 @@ module.exports = (report, section) => {
 
             target = report.data_public;
 
-            part = 'decisions';
-            write('Average price', 'average_price');
-
-            target = report.data_public.data;
-
-            part = 'mpi';
-            write('Average MPI', 'average_mpi');
-
-            title += '\n';
-
-            target = report.data_public;
-
             title += 'Price and sales:\n';
 
             for (let i = 0; i < report.player_count; i += 1) {
@@ -97,6 +85,46 @@ module.exports = (report, section) => {
                     + ' - ' + target.data.balance.retern[i]
                     + ', ' + target.data.mpi.mpi[i] + '\n';
             }
+
+            title += '\n';
+
+            part = 'decisions';
+            write('Average price', 'average_price');
+
+            break;
+        }
+        case 'Brief': {
+            target = report.data_early;
+
+            part = 'balance';
+            write('Size', 'size');
+
+            part = 'history';
+            write('Total R & D', 'history_rd');
+
+            title += '\n';
+
+            target = report.data;
+
+            part = 'orders';
+            write('Inventory', 'inventory');
+            write('Unfilled', 'unfilled');
+
+            part = 'balance';
+            write('Sales income', 'sales');
+            write('Loan', 'loan');
+            write('Cash', 'cash');
+
+            title += '\n';
+
+            target = report.data_public.data;
+
+            part = 'orders';
+            write('Average inventory', 'average_inventory');
+            write('Average unfilled', 'average_unfilled');
+
+            part = 'balance';
+            write('Average sales income', 'average_sales');
 
             break;
         }

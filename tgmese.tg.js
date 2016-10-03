@@ -74,47 +74,55 @@ module.exports = (bot) => {
                         tgmeseReport(
                             reports[j].report,
                             'Main'
-                        ),
-                        {
-                            reply_markup: {
-                                inline_keyboard: [[{
-                                    text: 'Before Period',
-                                    callback_data: JSON.stringify(
-                                        ['Before Period', reports[j].date]
-                                    ),
-                                }], [{
-                                    text: 'After Period',
-                                    callback_data: JSON.stringify(
-                                        ['After Period', reports[j].date]
-                                    ),
-                                }], [{
-                                    text: 'Industry Average',
-                                    callback_data: JSON.stringify(
-                                        ['Industry Average', reports[j].date]
-                                    ),
-                                }]],
-                            },
-                        }
+                        )
                     ).then(() => {
-                        if (reports[j].report.next_settings) {
-                            bot.sendMessage(
-                                j,
-                                'Please submit:\n'
-                                    + 'P Pd Mk CI RD\n'
-                                    + 'Example:\n'
-                                    + '65 500 5000 5000 5000\n',
-                                {
-                                    reply_markup: {
-                                        force_reply: true,
-                                    },
-                                }
-                            );
-                        } else {
-                            bot.sendMessage(
-                                j,
-                                'Game finished\n'
-                            );
-                        }
+                        bot.sendMessage(
+                            i,
+                            tgmeseReport(
+                                reports[j].report,
+                                'Brief'
+                            ),
+                            {
+                                reply_markup: {
+                                    inline_keyboard: [[{
+                                        text: 'Before Period',
+                                        callback_data: JSON.stringify(
+                                            ['Before Period', reports[j].date]
+                                        ),
+                                    }], [{
+                                        text: 'After Period',
+                                        callback_data: JSON.stringify(
+                                            ['After Period', reports[j].date]
+                                        ),
+                                    }], [{
+                                        text: 'Industry Average',
+                                        callback_data: JSON.stringify(
+                                            ['Industry Average', reports[j].date]
+                                        ),
+                                    }]],
+                                },
+                            }
+                        ).then(() => {
+                            if (reports[j].report.next_settings) {
+                                bot.sendMessage(
+                                    j,
+                                    'Please submit:\n'
+                                        + 'P Pd Mk CI RD\n'
+                                        + 'Example:\n'
+                                        + '65 500 5000 5000 5000\n',
+                                    {
+                                        reply_markup: {
+                                            force_reply: true,
+                                        },
+                                    }
+                                );
+                            } else {
+                                bot.sendMessage(
+                                    j,
+                                    'Game finished\n'
+                                );
+                            }
+                        });
                     });
                 }
             );
