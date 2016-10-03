@@ -37,7 +37,7 @@ module.exports = (bot) => {
                     date: now + config.tgmeseReportTimeout,
                 };
 
-                if (game.total >= 1 || !game.users[i]) {
+                if (game.total > 1 || !game.users[i]) {
                     bot.sendMessage(
                         i,
                         tgmeseReport(
@@ -221,7 +221,7 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.chat.id,
-                'Failed: Game is not running now\n',
+                'Failed: You are not in a game\n',
                 {
                     reply_to_message_id: msg.message_id,
                 }
