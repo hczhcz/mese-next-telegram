@@ -283,7 +283,7 @@ module.exports = (bot) => {
                         i,
                         'Game expired\n'
                         + '\n'
-                        + 'Please /join the game again'
+                        + 'Please /join the game again\n'
                     );
                 }
             }

@@ -248,7 +248,7 @@ module.exports = (bot) => {
 
                 bot.sendMessage(
                     i,
-                    'Period will end in:'
+                    'Period will end in:\n'
                     + Math.round((game.closeDate - now) / 1000)
                     + ' seconds\n'
                 );
@@ -256,7 +256,7 @@ module.exports = (bot) => {
                 for (const j in game.users) {
                     bot.sendMessage(
                         j,
-                        'Period will end in:'
+                        'Period will end in:\n'
                         + Math.round((game.closeDate - now) / 1000)
                         + ' seconds\n'
                     );
