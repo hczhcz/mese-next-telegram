@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('./config');
+const util = require('./util');
 const access = require('./server.tgaccess');
 
 const gathers = access.gathers;
@@ -36,6 +37,12 @@ const nameList = (users) => {
 
 module.exports = (bot) => {
     bot.onText(/^\/join(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' join'
+        );
+
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -127,6 +134,12 @@ module.exports = (bot) => {
     });
 
     bot.onText(/^\/flee(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' flee'
+        );
+
         const now = Date.now();
 
         if (games[msg.chat.id]) {
@@ -187,6 +200,12 @@ module.exports = (bot) => {
     });
 
     bot.onText(/^\/ready(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' ready'
+        );
+
         const now = Date.now();
 
         if (games[msg.chat.id]) {

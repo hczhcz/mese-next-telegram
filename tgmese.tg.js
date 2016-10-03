@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('./config');
+const util = require('./util');
 const core = require('./mese.core');
 const access = require('./server.tgaccess');
 const tgmeseReport = require('./tgmese.report');
@@ -153,6 +154,12 @@ module.exports = (bot) => {
     };
 
     bot.onText(/([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)$/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' submit'
+        );
+
         if (userGames[msg.from.id]) {
             const game = userGames[msg.from.id];
 
