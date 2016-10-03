@@ -4,8 +4,8 @@ const config = require('./config');
 const tg = require('./server.tg');
 
 process.on('uncaughtException', (err) => {
-    util.log('uncaught exception');
-    util.err(err);
+    console.log('uncaught exception'); // TODO
+    console.err(err); // TODO
 });
 
 tg(config.tgInterval, [
