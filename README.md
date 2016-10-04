@@ -21,9 +21,10 @@ Before running the server, you may do the following steps:
 2. Install Node.js;
 3. Install NPM (Node.js Package Manager);
 4. Install required NPM packages: `node-telegram-bot-api`;
-5. Get MESE-Next Engine from our group or by contacting us, and put it under the same directory as MESE-Next Telegram Server's;
-6. Edit `config.js` if you want to change some configurations;
-7. Now, you could run `tgmese.main.js` using Node.js.
+5. Get MESE-Next Engine from our group or by contacting us;
+6. Put MESE-Next Engine under the same directory as MESE-Next Telegram Server's, and give it execution permission;
+7. Edit `config.js` if you want to change some configurations;
+8. Now, you could run `tgmese.main.js` using Node.js.
 
 License
 ---
