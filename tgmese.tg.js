@@ -140,15 +140,10 @@ module.exports = (bot) => {
                             if (reports[j].report.next_settings) {
                                 bot.sendMessage(
                                     j,
-                                    'Please submit:\n'
-                                        + 'P Pd Mk CI RD\n'
-                                        + 'Example:\n'
-                                        + '65 500 5000 5000 5000\n',
-                                    {
-                                        reply_markup: {
-                                            force_reply: true,
-                                        },
-                                    }
+                                    tgmeseReport(
+                                        reports[j].report,
+                                        'Decision'
+                                    )
                                 );
                             } else {
                                 bot.sendMessage(

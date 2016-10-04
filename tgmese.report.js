@@ -220,6 +220,28 @@ module.exports = (report, section) => {
 
             break;
         }
+        case 'Decision': {
+            target = report.next_settings.limits;
+
+            title += 'Please submit:\n'
+                + 'P Pd Mk CI RD\n'
+                + '\n'
+                + 'Example:\n'
+                + '65 500 5000 5000 5000\n'
+                + '\n'
+                + 'Price - ' + target.price_min
+                + ' to ' + target.price_max + '\n'
+                + 'Production - 0'
+                + ' to ' + report.data_early.balance.size + '\n'
+                + 'Marketing - 0'
+                + ' to ' + target.mk_limit + '\n'
+                + 'Investment - 0'
+                + ' to ' + target.ci_limit + '\n'
+                + 'R & D - 0'
+                + ' to ' + target.rd_limit + '\n';
+
+            break;
+        }
         default: {
             throw 1;
         }
