@@ -126,7 +126,7 @@ module.exports = (bot) => {
                         }]];
 
                         bot.sendMessage(
-                            i,
+                            j,
                             tgmeseReport(
                                 reports[j].report,
                                 'Brief'
