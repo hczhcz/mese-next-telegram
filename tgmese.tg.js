@@ -54,7 +54,7 @@ module.exports = (bot) => {
                     report.players[user.index] = '@' + user.username;
                 } else {
                     report.players[user.index] = user.first_name
-                        + ' ' + user.last_name;
+                        + (user.last_name ? ' ' + user.last_name : '');
                 }
             }
         };
@@ -163,7 +163,7 @@ module.exports = (bot) => {
         }
     };
 
-    bot.onText(/([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)$/, (msg, match) => {
+    bot.onText(/([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/, (msg, match) => {
         util.log(
             (msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)

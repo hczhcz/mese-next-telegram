@@ -28,7 +28,8 @@ const nameList = (users) => {
         if (users[j].username) {
             result += '@' + users[j].username + '\n';
         } else {
-            result += users[j].first_name + ' ' + users[j].last_name + '\n';
+            result += users[j].first_name
+                + (users[j].last_name ? ' ' + users[j].last_name : '') + '\n';
         }
     }
 
