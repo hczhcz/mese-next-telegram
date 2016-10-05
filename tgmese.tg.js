@@ -30,7 +30,7 @@ module.exports = (bot) => {
 
                     game.period = 1;
 
-                    sendAll(now, game, game.chat.id); // TODO
+                    sendAll(now, game, game.chat.id);
                 }
             };
         };
@@ -233,8 +233,10 @@ module.exports = (bot) => {
             reports[query.from.id]
             && reports[query.from.id].date === data[1]
         ) {
-            bot.answerCallbackQuery(
-                query.id,
+            bot.answerCallbackQuery(query.id);
+
+            bot.sendMessage(
+                query.from.id,
                 tgmeseReport(
                     reports[query.from.id].report,
                     data[0]
