@@ -89,7 +89,8 @@ module.exports = (report, section) => {
             title += '\n';
 
             part = 'decisions';
-            write('Average price', 'average_price');
+            write('Average given price', 'average_price_given');
+            write('Average selling price', 'average_price');
 
             break;
         }
@@ -135,6 +136,7 @@ module.exports = (report, section) => {
             write('Prod rate', 'prod_rate');
             write('Unit prod cost', 'prod_cost_unit');
             write('Marginal cost', 'prod_cost_marginal');
+            write('Total prod cost', 'prod_cost');
 
             title += '\n';
 
@@ -146,9 +148,12 @@ module.exports = (report, section) => {
             title += '\n';
 
             part = 'balance';
+            write('Deprecation', 'deprecation');
+            write('Capital', 'capital');
             write('Size', 'size');
             write('Spending', 'spending');
-            write('Cash / loan', 'balance_early');
+            write('Early loan', 'loan_early');
+            write('Interest', 'interest');
 
             title += '\n';
 
@@ -170,16 +175,23 @@ module.exports = (report, section) => {
 
             part = 'goods';
             write('Cost of goods sold', 'goods_cost_sold');
+            write('Cost of inventory', 'goods_cost_inventory');
 
             title += '\n';
 
             part = 'balance';
             write('Sales income', 'sales');
             write('Cost before tax', 'cost_before_tax');
+            write('Profit before tax', 'profit_before_tax');
             write('Profit', 'profit');
             write('Loan', 'loan');
             write('Cash', 'cash');
             write('Retained earning', 'retern');
+
+            title += '\n';
+
+            part = 'mpi';
+            write('MPI', 'mpi');
 
             break;
         }
@@ -187,12 +199,18 @@ module.exports = (report, section) => {
             target = report.data_public.data_early;
 
             part = 'production';
-            write('Prod cost', 'average_prod_cost_unit');
+            write('Unit prod cost', 'average_prod_cost_unit');
+            write('Total prod cost', 'average_prod_cost');
+
+            title += '\n';
 
             part = 'goods';
             write('Goods', 'average_goods');
 
+            title += '\n';
+
             part = 'balance';
+            write('Capital', 'average_capital');
             write('Size', 'average_size');
 
             title += '\n';
@@ -215,8 +233,14 @@ module.exports = (report, section) => {
             part = 'balance';
             write('Sales income', 'average_sales');
             write('Cost before tax', 'average_cost_before_tax');
+            write('Profit before tax', 'average_profit_before_tax');
             write('Profit', 'average_profit');
             write('Retained earning', 'average_retern');
+
+            title += '\n';
+
+            part = 'mpi';
+            write('MPI', 'average_mpi');
 
             break;
         }

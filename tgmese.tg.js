@@ -76,15 +76,7 @@ module.exports = (bot) => {
                             reports[i].report,
                             'Main'
                         )
-                    ).then(() => {
-                        bot.sendMessage(
-                            i,
-                            tgmeseReport(
-                                reports[i].report,
-                                'Industry Average'
-                            )
-                        );
-                    });
+                    );
                 }
             }
         );
