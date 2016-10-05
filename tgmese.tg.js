@@ -19,7 +19,7 @@ module.exports = (bot) => {
                 if (period < config.tgmeseSettings.length) {
                     core.alloc(
                         gameData,
-                        config.tgmeseSettings[game.chat.id],
+                        config.tgmeseSettings[period],
                         allocator(period + 1)
                     );
                 } else {
@@ -241,8 +241,8 @@ module.exports = (bot) => {
             reports[query.from.id]
             && reports[query.from.id].date === data[1]
         ) {
-            bot.sendMessage(
-                query.from.id,
+            bot.answerCallbackQuery(
+                query.id,
                 tgmeseReport(
                     reports[query.from.id].report,
                     data[0]
