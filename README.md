@@ -9,6 +9,7 @@ To run the server, you need:
 * Node.js 4.0+
 * Node.js Telegram Bot API
 * MESE-Next Engine (released in MESE China Group)
+* Telegram bot token
 
 Installation
 ---
@@ -24,7 +25,8 @@ Before running the server, you may do the following steps:
 5. Get MESE-Next Engine from our group or by contacting us;
 6. Put MESE-Next Engine under the same directory as MESE-Next Telegram Server's, and give it execution permission;
 7. Edit `config.js` if you want to change some configurations;
-8. Now, you could run `tgmese.main.js` using Node.js.
+8. Put your Telegram bot token in `token` under the same directory as MESE-Next Telegram Server's
+9. Now, you could run `tgmese.main.js` using Node.js.
 
 License
 ---
