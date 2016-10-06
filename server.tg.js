@@ -1,10 +1,8 @@
 'use strict';
 
-const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 
-module.exports = (interval, handlers) => {
-    const token = String(fs.readFileSync('token'));
+module.exports = (token, interval, handlers) => {
     const bot = new TelegramBot(token, {
         polling: {
             interval: interval,
