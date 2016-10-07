@@ -5,6 +5,8 @@ module.exports = {
     tgGatherTimeout: 600 * 1000,
     tgGatherRemind: 30 * 1000,
     tgReadyTimeout: 30 * 1000,
+    tgaccessInterval: 10 * 1000,
+    tgaccessFile: '/dev/shm/tgmese',
 
     meseEngine: './mese',
     meseMaxPlayer: 32, // TODO

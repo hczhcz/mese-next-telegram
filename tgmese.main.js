@@ -4,17 +4,26 @@ const fs = require('fs');
 const config = require('./config');
 const util = require('./util');
 const tg = require('./server.tg');
+const tgaccess = require('./server.tgaccess');
 
 process.on('uncaughtException', (err) => {
     util.log('uncaught exception');
     util.err(err);
 });
 
-fs.readFile('token', (err, token) => {
-    util.log('bot init');
+util.log('cache init ' + config.tgaccessFile);
 
-    tg(token, config.tgInterval, [
-        require('./site.tg'),
-        require('./tgmese.tg'),
-    ]);
-});
+tgaccess.init(
+    config.tgaccessInterval,
+    config.tgaccessFile,
+    () => {
+        fs.readFile('token', (err, data) => {
+            util.log('bot init');
+
+            tg(data, config.tgInterval, [
+                require('./site.tg'),
+                require('./tgmese.tg'),
+            ]);
+        });
+    }
+);
