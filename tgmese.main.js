@@ -1,21 +1,22 @@
 'use strict';
 
 const fs = require('fs');
+
 const config = require('./config');
 const util = require('./util');
+const cache = require('./server.cache');
 const tg = require('./server.tg');
-const tgaccess = require('./server.tgaccess');
 
 process.on('uncaughtException', (err) => {
     util.log('uncaught exception');
     util.err(err);
 });
 
-util.log('cache init ' + config.tgaccessFile);
+util.log('cache init ' + config.cacheFile);
 
-tgaccess.init(
-    config.tgaccessInterval,
-    config.tgaccessFile,
+cache.init(
+    config.cacheInterval,
+    config.cacheFile,
     () => {
         fs.readFile('token', (err, data) => {
             util.log('bot init');

@@ -2,11 +2,11 @@
 
 const config = require('./config');
 const util = require('./util');
-const tgaccess = require('./server.tgaccess');
+const cache = require('./server.cache');
 
-const gathers = tgaccess.gathers;
-const games = tgaccess.games;
-const userGames = tgaccess.userGames;
+const gathers = cache.gathers;
+const games = cache.games;
+const userGames = cache.userGames;
 
 const readyTime = (ready, date, now) => {
     if (ready) {

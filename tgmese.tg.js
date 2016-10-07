@@ -2,13 +2,13 @@
 
 const config = require('./config');
 const util = require('./util');
+const cache = require('./server.cache');
 const core = require('./mese.core');
-const tgaccess = require('./server.tgaccess');
 const tgmeseReport = require('./tgmese.report');
 
-const games = tgaccess.games;
-const userGames = tgaccess.userGames;
-const reports = tgaccess.reports;
+const games = cache.games;
+const userGames = cache.userGames;
+const reports = cache.reports;
 
 module.exports = (bot) => {
     const init = (game) => {
