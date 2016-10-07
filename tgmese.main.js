@@ -20,7 +20,7 @@ cache.init(
     () => {
         fs.readFile('token', (err, data) => {
             if (err) {
-                throw 1;
+                throw Error('no token');
             }
 
             util.log('bot init');

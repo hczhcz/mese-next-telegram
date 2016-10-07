@@ -288,7 +288,7 @@ module.exports = (bot) => {
                     }
 
                     if (total !== game.total) {
-                        throw 1; // never reach
+                        throw Error('broken data'); // never reach
                     }
 
                     game.needInit = true;

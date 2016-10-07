@@ -267,7 +267,7 @@ module.exports = (report, section) => {
             break;
         }
         default: {
-            throw 1;
+            throw Error('wrong report section');
         }
     }
 
