@@ -10,7 +10,7 @@ module.exports = (report, section) => {
 
     const write = (name, item) => {
         title += name
-            + ' - ' + target[part][item] + '\n';
+            + ' - `' + target[part][item] + '`\n';
     };
 
     switch (section) {
@@ -61,9 +61,9 @@ module.exports = (report, section) => {
 
             for (let i = 0; i < report.player_count; i += 1) {
                 title += report.players[i]
-                    + ' - ' + target.decisions.price[i]
+                    + ' - `' + target.decisions.price[i]
                     + ' * ' + target.data.orders.sold[i]
-                    + ' = ' + target.data.balance.sales[i] + '\n';
+                    + ' = ' + target.data.balance.sales[i] + '`\n';
             }
 
             title += '\n';
@@ -72,8 +72,8 @@ module.exports = (report, section) => {
 
             for (let i = 0; i < report.player_count; i += 1) {
                 title += report.players[i]
-                    + ' - ' + target.data.balance.cost_before_tax[i]
-                    + ', ' + target.data.balance.profit[i] + '\n';
+                    + ' - `' + target.data.balance.cost_before_tax[i]
+                    + ', ' + target.data.balance.profit[i] + '`\n';
             }
 
             title += '\n';
@@ -82,8 +82,8 @@ module.exports = (report, section) => {
 
             for (let i = 0; i < report.player_count; i += 1) {
                 title += report.players[i]
-                    + ' - ' + target.data.balance.retern[i]
-                    + ', ' + target.data.mpi.mpi[i] + '\n';
+                    + ' - `' + target.data.balance.retern[i]
+                    + ', ' + target.data.mpi.mpi[i] + '`\n';
             }
 
             title += '\n';
@@ -253,16 +253,16 @@ module.exports = (report, section) => {
                 + 'Example:\n'
                 + '65 500 5000 5000 5000\n'
                 + '\n'
-                + 'Price - ' + target.price_min
-                + ' to ' + target.price_max + '\n'
-                + 'Production - 0'
-                + ' to ' + report.data_early.balance.size + '\n'
-                + 'Marketing - 0'
-                + ' to ' + target.mk_limit + '\n'
-                + 'Investment - 0'
-                + ' to ' + target.ci_limit + '\n'
-                + 'R & D - 0'
-                + ' to ' + target.rd_limit + '\n';
+                + 'Price - `' + target.price_min
+                + ' to ' + target.price_max + '`\n'
+                + 'Production - `0'
+                + ' to ' + report.data_early.balance.size + '`\n'
+                + 'Marketing - `0'
+                + ' to ' + target.mk_limit + '`\n'
+                + 'Investment - `0'
+                + ' to ' + target.ci_limit + '`\n'
+                + 'R & D - `0'
+                + ' to ' + target.rd_limit + '`\n';
 
             break;
         }
