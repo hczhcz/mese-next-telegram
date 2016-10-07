@@ -70,7 +70,10 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.from.id,
-                'Hello from MESE bot\n'
+                config.tgMessage,
+                {
+                    parse_mode: 'Markdown',
+                }
             ).then((msgSent) => {
                 if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
