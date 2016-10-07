@@ -6,7 +6,7 @@ Requirements
 
 To run the server, you need:
 
-* Node.js 4.0+
+* Node.js 5.10+
 * Node.js Telegram Bot API
 * MESE-Next Engine (released in MESE China Group)
 * Telegram bot token

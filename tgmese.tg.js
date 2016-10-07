@@ -31,7 +31,7 @@ module.exports = (bot) => {
         };
 
         core.printPublic(
-            game.gameData,
+            Buffer.from(game.gameData),
             (report) => {
                 setPlayers(report);
 
@@ -54,7 +54,7 @@ module.exports = (bot) => {
 
         for (const j in game.users) {
             core.printPlayer(
-                game.gameData,
+                Buffer.from(game.gameData),
                 game.users[j].index,
                 (report) => {
                     setPlayers(report);
@@ -136,7 +136,7 @@ module.exports = (bot) => {
                     game.closeDate = now + config.tgmeseCloseTimeout;
                     game.closeRemind = now + config.tgmeseCloseTimeout
                         - config.tgmeseCloseRemind;
-                    game.gameData = gameData;
+                    game.gameData = gameData.toJSON();
 
                     game.period = 1;
 
@@ -163,10 +163,10 @@ module.exports = (bot) => {
         if (userGames[msg.from.id]) {
             const game = userGames[msg.from.id];
 
-            const oldData = game.gameData;
+            const oldData = Buffer.from(game.gameData);
 
             core.submit(
-                game.gameData,
+                oldData,
                 game.users[msg.from.id].index,
                 -1,
                 parseFloat(match[1]),
@@ -175,8 +175,8 @@ module.exports = (bot) => {
                 parseFloat(match[4]),
                 parseFloat(match[5]),
                 (gameData) => {
-                    if (game.gameData === oldData) {
-                        game.gameData = gameData;
+                    if (Buffer.from(game.gameData).equals(oldData)) {
+                        game.gameData = gameData.toJSON();
 
                         bot.sendMessage(
                             msg.chat.id,
@@ -205,10 +205,6 @@ module.exports = (bot) => {
                     }
                 },
                 (gameData) => {
-                    // if (game.gameData === oldData) {
-                    //     game.gameData = gameData;
-                    // }
-
                     bot.sendMessage(
                         msg.chat.id,
                         'Failed: Decision is declined\n',
@@ -282,12 +278,12 @@ module.exports = (bot) => {
                 delete game.closeDate;
 
                 core.closeForce(
-                    game.gameData,
+                    Buffer.from(game.gameData),
                     (gameData) => {
                         game.closeDate = now + config.tgmeseCloseTimeout;
                         game.closeRemind = now + config.tgmeseCloseTimeout
                             - config.tgmeseCloseRemind;
-                        game.gameData = gameData;
+                        game.gameData = gameData.toJSON();
 
                         game.period += 1;
 
