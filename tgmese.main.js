@@ -19,6 +19,10 @@ cache.init(
     config.cacheFile,
     () => {
         fs.readFile('token', (err, data) => {
+            if (err) {
+                throw 1;
+            }
+
             util.log('bot init');
 
             tg(data, config.tgInterval, [

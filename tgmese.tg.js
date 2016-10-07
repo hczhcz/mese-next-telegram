@@ -11,38 +11,6 @@ const userGames = cache.userGames;
 const reports = cache.reports;
 
 module.exports = (bot) => {
-    const init = (game) => {
-        const now = Date.now();
-
-        const allocator = (period) => {
-            return (gameData) => {
-                if (period < config.tgmeseSettings.length) {
-                    core.alloc(
-                        gameData,
-                        config.tgmeseSettings[period],
-                        allocator(period + 1)
-                    );
-                } else {
-                    game.closeDate = now + config.tgmeseCloseTimeout;
-                    game.closeRemind = now + config.tgmeseCloseTimeout
-                        - config.tgmeseCloseRemind;
-                    game.gameData = gameData;
-
-                    game.period = 1;
-
-                    sendAll(now, game, game.chat.id);
-                }
-            };
-        };
-
-        core.init(
-            String(game.total),
-            config.tgmesePreset,
-            config.tgmeseSettings[0],
-            allocator(1)
-        );
-    };
-
     const sendAll = (now, game, i) => {
         const setPlayers = (report) => {
             report.players = [];
@@ -53,8 +21,11 @@ module.exports = (bot) => {
                 if (user.username) {
                     report.players[user.index] = '@' + user.username;
                 } else {
-                    report.players[user.index] = user.first_name
-                        + (user.last_name ? ' ' + user.last_name : '');
+                    report.players[user.index] = user.first_name + (
+                        user.last_name
+                            ? ' ' + user.last_name
+                            : ''
+                    );
                 }
             }
         };
@@ -148,6 +119,38 @@ module.exports = (bot) => {
                 }
             );
         }
+    };
+
+    const init = (game) => {
+        const now = Date.now();
+
+        const allocator = (period) => {
+            return (gameData) => {
+                if (period < config.tgmeseSettings.length) {
+                    core.alloc(
+                        gameData,
+                        config.tgmeseSettings[period],
+                        allocator(period + 1)
+                    );
+                } else {
+                    game.closeDate = now + config.tgmeseCloseTimeout;
+                    game.closeRemind = now + config.tgmeseCloseTimeout
+                        - config.tgmeseCloseRemind;
+                    game.gameData = gameData;
+
+                    game.period = 1;
+
+                    sendAll(now, game, game.chat.id);
+                }
+            };
+        };
+
+        core.init(
+            String(game.total),
+            config.tgmesePreset,
+            config.tgmeseSettings[0],
+            allocator(1)
+        );
     };
 
     bot.onText(/([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/, (msg, match) => {
