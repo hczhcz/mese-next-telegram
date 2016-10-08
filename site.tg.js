@@ -14,8 +14,7 @@ const readyTime = (ready, date, now) => {
             + Math.round((date - now) / 1000)
             + ' seconds\n';
     } else {
-        return 'Please send "ready" command\n'
-            + 'to start the game\n'
+        return 'Please send "ready" command to start the game\n'
             + '\n'
             + 'Game will expire in: '
             + Math.round((date - now) / 1000)
@@ -126,7 +125,8 @@ module.exports = (bot) => {
             }, () => {
                 bot.sendMessage(
                     msg.chat.id,
-                    'Failed: Please start @' + bot.me.username + '\n'
+                    'Failed: Please start @'
+                    + bot.me.username
                     + 'and join again\n',
                     {
                         reply_to_message_id: msg.message_id,

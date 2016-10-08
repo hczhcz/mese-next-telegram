@@ -163,7 +163,9 @@ module.exports = (bot) => {
         );
     };
 
-    bot.onText(/([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/, (msg, match) => {
+    const decisionRe = /([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/;
+
+    bot.onText(decisionRe, (msg, match) => {
         util.log(
             (msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
