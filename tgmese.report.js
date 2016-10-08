@@ -251,7 +251,7 @@ module.exports = (report, section) => {
                 + 'P Pd Mk CI RD\n'
                 + '\n'
                 + 'Example:\n'
-                + '65 500 5000 5000 5000\n'
+                + '`65` `500` `5000` `10000` `5000`\n'
                 + '\n'
                 + 'Price - `' + target.price_min + '`'
                 + ' to `' + target.price_max + '`\n'

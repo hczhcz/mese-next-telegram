@@ -15,7 +15,7 @@ const readyTime = (ready, date, now) => {
             + ' seconds\n';
     }
 
-    return 'Please send "ready" command to start the game\n'
+    return 'Please send a "ready" command to start the game\n'
         + '\n'
         + 'Game will expire in: '
         + Math.round((date - now) / 1000)
