@@ -79,7 +79,7 @@ module.exports = (bot) => {
 
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
-                    userGames[msg.from.id] = gather;
+                    userGames[msg.from.id] = msg.chat.id;
 
                     bot.sendMessage(
                         msg.chat.id,
@@ -106,7 +106,7 @@ module.exports = (bot) => {
 
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
-                    userGames[msg.from.id] = gather;
+                    userGames[msg.from.id] = msg.chat.id;
 
                     bot.sendMessage(
                         msg.chat.id,

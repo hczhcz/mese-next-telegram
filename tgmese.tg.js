@@ -173,7 +173,7 @@ module.exports = (bot) => {
         );
 
         if (userGames[msg.from.id]) {
-            const game = userGames[msg.from.id];
+            const game = games[userGames[msg.from.id]];
 
             const oldData = Buffer.from(game.gameData);
 
