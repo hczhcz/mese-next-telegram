@@ -146,7 +146,7 @@ module.exports = (bot) => {
                     game.closeDate = now + config.tgmeseCloseTimeout;
                     game.closeRemind = now + config.tgmeseCloseTimeout
                         - config.tgmeseCloseRemind;
-                    game.gameData = gameData.toJSON();
+                    game.gameData = gameData.toJSON().data;
 
                     game.period = 1;
 
@@ -188,7 +188,7 @@ module.exports = (bot) => {
                 parseFloat(match[5]),
                 (gameData) => {
                     if (Buffer.from(game.gameData).equals(oldData)) {
-                        game.gameData = gameData.toJSON();
+                        game.gameData = gameData.toJSON().data;
 
                         bot.sendMessage(
                             msg.chat.id,
@@ -299,7 +299,7 @@ module.exports = (bot) => {
                         game.closeDate = now + config.tgmeseCloseTimeout;
                         game.closeRemind = now + config.tgmeseCloseTimeout
                             - config.tgmeseCloseRemind;
-                        game.gameData = gameData.toJSON();
+                        game.gameData = gameData.toJSON().data;
 
                         game.period += 1;
 
