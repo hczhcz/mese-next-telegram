@@ -46,10 +46,7 @@ module.exports = (bot) => {
                         tgmeseReport(
                             reports[i].report,
                             'Main'
-                        ),
-                        {
-                            parse_mode: 'Markdown',
-                        }
+                        )
                     );
                 }
             }
@@ -72,10 +69,7 @@ module.exports = (bot) => {
                         tgmeseReport(
                             reports[j].report,
                             'Main'
-                        ),
-                        {
-                            parse_mode: 'Markdown',
-                        }
+                        )
                     ).then(() => {
                         const buttons = [[{
                             text: 'Before Period',
@@ -101,7 +95,6 @@ module.exports = (bot) => {
                                 'Brief'
                             ),
                             {
-                                parse_mode: 'Markdown',
                                 reply_markup: {
                                     inline_keyboard: buttons,
                                 },
@@ -113,10 +106,7 @@ module.exports = (bot) => {
                                     tgmeseReport(
                                         reports[j].report,
                                         'Decision'
-                                    ),
-                                    {
-                                        parse_mode: 'Markdown',
-                                    }
+                                    )
                                 );
                             } else {
                                 bot.sendMessage(
@@ -197,13 +187,12 @@ module.exports = (bot) => {
                                 msg.chat.id,
                                 'OK: Decision is accepted\n'
                                 + '\n'
-                                + 'Price - `' + match[1] + '`\n'
-                                + 'Prod - `' + match[2] + '`\n'
-                                + 'Marketing - `' + match[3] + '`\n'
-                                + 'Investment - `' + match[4] + '`\n'
-                                + 'R & D - `' + match[5] + '`\n',
+                                + 'Price - ' + match[1] + '\n'
+                                + 'Prod - ' + match[2] + '\n'
+                                + 'Marketing - ' + match[3] + '\n'
+                                + 'Investment - ' + match[4] + '\n'
+                                + 'R & D - ' + match[5] + '\n',
                                 {
-                                    parse_mode: 'Markdown',
                                     reply_to_message_id: msg.message_id,
                                 }
                             );
@@ -264,10 +253,7 @@ module.exports = (bot) => {
                 tgmeseReport(
                     reports[query.from.id].report,
                     data[0]
-                ),
-                {
-                    parse_mode: 'Markdown',
-                }
+                )
             );
         }
     });
