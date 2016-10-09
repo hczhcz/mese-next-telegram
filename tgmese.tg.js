@@ -143,6 +143,8 @@ module.exports = (bot) => {
                         allocator(period + 1)
                     );
                 } else {
+                    delete game.initDate;
+
                     game.closeDate = now + config.tgmeseCloseTimeout;
                     game.closeRemind = now + config.tgmeseCloseTimeout
                         - config.tgmeseCloseRemind;
@@ -175,58 +177,68 @@ module.exports = (bot) => {
         if (userGames[msg.from.id]) {
             const game = games[userGames[msg.from.id]];
 
-            const oldData = Buffer.from(game.gameData);
+            if (game.closeDate) {
+                const oldData = Buffer.from(game.gameData);
 
-            core.submit(
-                oldData,
-                game.users[msg.from.id].index,
-                -1,
-                parseFloat(match[1]),
-                parseFloat(match[2]),
-                parseFloat(match[3]),
-                parseFloat(match[4]),
-                parseFloat(match[5]),
-                (gameData) => {
-                    if (Buffer.from(game.gameData).equals(oldData)) {
-                        game.gameData = gameData.toJSON().data;
+                core.submit(
+                    oldData,
+                    game.users[msg.from.id].index,
+                    -1,
+                    parseFloat(match[1]),
+                    parseFloat(match[2]),
+                    parseFloat(match[3]),
+                    parseFloat(match[4]),
+                    parseFloat(match[5]),
+                    (gameData) => {
+                        if (Buffer.from(game.gameData).equals(oldData)) {
+                            game.gameData = gameData.toJSON().data;
 
+                            bot.sendMessage(
+                                msg.chat.id,
+                                'OK: Decision is accepted\n'
+                                + '\n'
+                                + 'Price - `' + match[1] + '`\n'
+                                + 'Prod - `' + match[2] + '`\n'
+                                + 'Marketing - `' + match[3] + '`\n'
+                                + 'Investment - `' + match[4] + '`\n'
+                                + 'R & D - `' + match[5] + '`\n',
+                                {
+                                    parse_mode: 'Markdown',
+                                    reply_to_message_id: msg.message_id,
+                                }
+                            );
+                        } else {
+                            // TODO
+                            bot.sendMessage(
+                                msg.chat.id,
+                                'Failed: System error\n'
+                                + '\n'
+                                + 'Please submit again\n',
+                                {
+                                    reply_to_message_id: msg.message_id,
+                                }
+                            );
+                        }
+                    },
+                    (gameData) => {
                         bot.sendMessage(
                             msg.chat.id,
-                            'OK: Decision is accepted\n'
-                            + '\n'
-                            + 'Price - `' + match[1] + '`\n'
-                            + 'Prod - `' + match[2] + '`\n'
-                            + 'Marketing - `' + match[3] + '`\n'
-                            + 'Investment - `' + match[4] + '`\n'
-                            + 'R & D - `' + match[5] + '`\n',
-                            {
-                                parse_mode: 'Markdown',
-                                reply_to_message_id: msg.message_id,
-                            }
-                        );
-                    } else {
-                        // TODO
-                        bot.sendMessage(
-                            msg.chat.id,
-                            'Failed: System error\n'
-                            + '\n'
-                            + 'Please submit again\n',
+                            'Failed: Decision is declined\n',
                             {
                                 reply_to_message_id: msg.message_id,
                             }
                         );
                     }
-                },
-                (gameData) => {
-                    bot.sendMessage(
-                        msg.chat.id,
-                        'Failed: Decision is declined\n',
-                        {
-                            reply_to_message_id: msg.message_id,
-                        }
-                    );
-                }
-            );
+                );
+            } else {
+                bot.sendMessage(
+                    msg.chat.id,
+                    'Failed: Game is not running\n',
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
+                );
+            }
         } else {
             bot.sendMessage(
                 msg.chat.id,

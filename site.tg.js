@@ -77,23 +77,27 @@ module.exports = (bot) => {
                 if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
 
-                    gather.users[msg.from.id] = msg.from;
-                    gather.total += 1;
-                    userGames[msg.from.id] = msg.chat.id;
+                    if (!gather.users[msg.from.id]) {
+                        gather.users[msg.from.id] = msg.from;
+                        gather.total += 1;
+                        userGames[msg.from.id] = msg.chat.id;
 
-                    bot.sendMessage(
-                        msg.chat.id,
-                        'OK: Join game\n'
-                        + '\n'
-                        + readyTime(gather.ready, gather.date, now)
-                        + '\n'
-                        + nameList(gather.users)
-                        + '\n'
-                        + '/join /flee\n',
-                        {
-                            reply_to_message_id: msg.message_id,
-                        }
-                    );
+                        bot.sendMessage(
+                            msg.chat.id,
+                            'OK: Join game\n'
+                            + '\n'
+                            + readyTime(gather.ready, gather.date, now)
+                            + '\n'
+                            + nameList(gather.users)
+                            + '\n'
+                            + '/join /flee\n',
+                            {
+                                reply_to_message_id: msg.message_id,
+                            }
+                        );
+                    } else {
+                        // TODO: error
+                    }
                 } else {
                     const gather = gathers[msg.chat.id] = {
                         chat: msg.chat,
@@ -104,23 +108,27 @@ module.exports = (bot) => {
                             - config.tgGatherRemind,
                     };
 
-                    gather.users[msg.from.id] = msg.from;
-                    gather.total += 1;
-                    userGames[msg.from.id] = msg.chat.id;
+                    if (!gather.users[msg.from.id]) {
+                        gather.users[msg.from.id] = msg.from;
+                        gather.total += 1;
+                        userGames[msg.from.id] = msg.chat.id;
 
-                    bot.sendMessage(
-                        msg.chat.id,
-                        'OK: New game\n'
-                        + '\n'
-                        + readyTime(gather.ready, gather.date, now)
-                        + '\n'
-                        + nameList(gather.users)
-                        + '\n'
-                        + '/join /flee\n',
-                        {
-                            reply_to_message_id: msg.message_id,
-                        }
-                    );
+                        bot.sendMessage(
+                            msg.chat.id,
+                            'OK: New game\n'
+                            + '\n'
+                            + readyTime(gather.ready, gather.date, now)
+                            + '\n'
+                            + nameList(gather.users)
+                            + '\n'
+                            + '/join /flee\n',
+                            {
+                                reply_to_message_id: msg.message_id,
+                            }
+                        );
+                    } else {
+                        // TODO: error
+                    }
                 }
             }, () => {
                 bot.sendMessage(
@@ -166,34 +174,36 @@ module.exports = (bot) => {
                 delete gather.users[msg.from.id];
                 gather.total -= 1;
                 delete userGames[msg.from.id];
-            }
 
-            if (gather.total > 0) {
-                bot.sendMessage(
-                    msg.chat.id,
-                    'OK: Leave game\n'
-                    + '\n'
-                    + readyTime(gather.ready, gather.date, now)
-                    + '\n'
-                    + nameList(gather.users)
-                    + '\n'
-                    + '/join /flee\n',
-                    {
-                        reply_to_message_id: msg.message_id,
-                    }
-                );
+                if (gather.total > 0) {
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: Leave game\n'
+                        + '\n'
+                        + readyTime(gather.ready, gather.date, now)
+                        + '\n'
+                        + nameList(gather.users)
+                        + '\n'
+                        + '/join /flee\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
+                } else {
+                    delete gathers[msg.chat.id];
+
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: Leave game\n'
+                        + '\n'
+                        + 'Game is canceled\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
+                }
             } else {
-                delete gathers[msg.chat.id];
-
-                bot.sendMessage(
-                    msg.chat.id,
-                    'OK: Leave game\n'
-                    + '\n'
-                    + 'Game is canceled\n',
-                    {
-                        reply_to_message_id: msg.message_id,
-                    }
-                );
+                // TODO: error
             }
         } else {
             bot.sendMessage(
@@ -295,6 +305,7 @@ module.exports = (bot) => {
                     }
 
                     game.needInit = true;
+                    game.initDate = now + config.tgInitTimeout;
 
                     bot.sendMessage(
                         i,
@@ -314,6 +325,25 @@ module.exports = (bot) => {
                         + 'Please /join the game again\n'
                     );
                 }
+            }
+        }
+
+        for (const i in games) {
+            const game = games[i];
+
+            if (game.initDate && game.initDate < now) {
+                delete games[i];
+
+                for (const j in game.users) {
+                    delete userGames[j];
+                }
+
+                bot.sendMessage(
+                    i,
+                    'Game initialization failed\n'
+                    + '\n'
+                    + 'Press /join to start a new game'
+                );
             }
         }
     });
