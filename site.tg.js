@@ -61,10 +61,7 @@ module.exports = (bot) => {
         } else {
             bot.sendMessage(
                 msg.from.id,
-                config.tgMessage,
-                {
-                    parse_mode: 'Markdown',
-                }
+                config.tgMessage
             ).then((msgSent) => {
                 if (userGames[msg.from.id]) {
                     bot.sendMessage(

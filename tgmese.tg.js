@@ -167,7 +167,7 @@ module.exports = (bot) => {
         if (userGames[msg.from.id]) {
             const game = games[userGames[msg.from.id]];
 
-            if (game.closeDate) {
+            if (game && game.closeDate) {
                 const oldData = Buffer.from(game.gameData);
 
                 core.submit(
