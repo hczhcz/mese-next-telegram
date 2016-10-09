@@ -58,14 +58,6 @@ module.exports = (bot) => {
                     reply_to_message_id: msg.message_id,
                 }
             );
-        } else if (userGames[msg.from.id]) {
-            bot.sendMessage(
-                msg.chat.id,
-                'Failed: You are in a game now\n',
-                {
-                    reply_to_message_id: msg.message_id,
-                }
-            );
         } else {
             bot.sendMessage(
                 msg.from.id,
@@ -74,30 +66,34 @@ module.exports = (bot) => {
                     parse_mode: 'Markdown',
                 }
             ).then((msgSent) => {
-                if (gathers[msg.chat.id]) {
+                if (userGames[msg.from.id]) {
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'Failed: You are in a game now\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
+                } else if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
 
-                    if (!gather.users[msg.from.id]) {
-                        gather.users[msg.from.id] = msg.from;
-                        gather.total += 1;
-                        userGames[msg.from.id] = msg.chat.id;
+                    gather.users[msg.from.id] = msg.from;
+                    gather.total += 1;
+                    userGames[msg.from.id] = msg.chat.id;
 
-                        bot.sendMessage(
-                            msg.chat.id,
-                            'OK: Join game\n'
-                            + '\n'
-                            + readyTime(gather.ready, gather.date, now)
-                            + '\n'
-                            + nameList(gather.users)
-                            + '\n'
-                            + '/join /flee\n',
-                            {
-                                reply_to_message_id: msg.message_id,
-                            }
-                        );
-                    } else {
-                        // TODO: error
-                    }
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: Join game\n'
+                        + '\n'
+                        + readyTime(gather.ready, gather.date, now)
+                        + '\n'
+                        + nameList(gather.users)
+                        + '\n'
+                        + '/join /flee\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
                 } else {
                     const gather = gathers[msg.chat.id] = {
                         chat: msg.chat,
@@ -108,27 +104,23 @@ module.exports = (bot) => {
                             - config.tgGatherRemind,
                     };
 
-                    if (!gather.users[msg.from.id]) {
-                        gather.users[msg.from.id] = msg.from;
-                        gather.total += 1;
-                        userGames[msg.from.id] = msg.chat.id;
+                    gather.users[msg.from.id] = msg.from;
+                    gather.total += 1;
+                    userGames[msg.from.id] = msg.chat.id;
 
-                        bot.sendMessage(
-                            msg.chat.id,
-                            'OK: New game\n'
-                            + '\n'
-                            + readyTime(gather.ready, gather.date, now)
-                            + '\n'
-                            + nameList(gather.users)
-                            + '\n'
-                            + '/join /flee\n',
-                            {
-                                reply_to_message_id: msg.message_id,
-                            }
-                        );
-                    } else {
-                        // TODO: error
-                    }
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: New game\n'
+                        + '\n'
+                        + readyTime(gather.ready, gather.date, now)
+                        + '\n'
+                        + nameList(gather.users)
+                        + '\n'
+                        + '/join /flee\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
                 }
             }, () => {
                 bot.sendMessage(
@@ -203,7 +195,13 @@ module.exports = (bot) => {
                     );
                 }
             } else {
-                // TODO: error
+                bot.sendMessage(
+                    msg.chat.id,
+                    'Failed: You are not in this game\n',
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
+                );
             }
         } else {
             bot.sendMessage(
