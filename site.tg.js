@@ -127,7 +127,7 @@ module.exports = (bot) => {
                     msg.chat.id,
                     'Failed: Please start @'
                     + bot.me.username
-                    + 'and join again\n',
+                    + ' and join again\n',
                     {
                         reply_to_message_id: msg.message_id,
                         reply_markup: {
