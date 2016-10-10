@@ -124,17 +124,21 @@ module.exports = (bot) => {
     const init = (game) => {
         const now = Date.now();
 
+        const preset = config.tgmesePreset;
+        const settings = config.tgmeseSettings;
+
         const allocator = (period) => {
             return (gameData) => {
-                if (period < config.tgmeseSettings.length) {
+                if (period < settings.length) {
                     core.alloc(
                         gameData,
-                        config.tgmeseSettings[period],
+                        settings[period],
                         allocator(period + 1)
                     );
                 } else {
                     delete game.initDate;
 
+                    game.totalPeriods = settings.length;
                     game.closeDate = now + config.tgmeseCloseTimeout;
                     game.closeRemind = now + config.tgmeseCloseTimeout
                         - config.tgmeseCloseRemind;
@@ -149,8 +153,8 @@ module.exports = (bot) => {
 
         core.init(
             String(game.total),
-            config.tgmesePreset,
-            config.tgmeseSettings[0],
+            preset,
+            settings[0],
             allocator(1)
         );
     };
@@ -301,7 +305,7 @@ module.exports = (bot) => {
 
                         game.period += 1;
 
-                        if (game.period === config.tgmeseSettings.length) {
+                        if (game.period === game.totalPeriods) {
                             delete games[i];
 
                             for (const j in game.users) {

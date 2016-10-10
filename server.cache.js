@@ -3,6 +3,19 @@
 const fs = require('fs');
 
 module.exports.init = (interval, file, callback) => {
+    const writeData = () => {
+        const data = JSON.stringify({
+            gathers: module.exports.gathers,
+            games: module.exports.games,
+            userGames: module.exports.userGames,
+            reports: module.exports.reports,
+        });
+
+        fs.writeFile(file, data, () => {
+            // nothing
+        });
+    };
+
     fs.readFile(file, (err, data) => {
         if (err) {
             module.exports.gathers = {};
@@ -20,17 +33,6 @@ module.exports.init = (interval, file, callback) => {
 
         callback();
 
-        setInterval(() => {
-            const data = JSON.stringify({
-                gathers: module.exports.gathers,
-                games: module.exports.games,
-                userGames: module.exports.userGames,
-                reports: module.exports.reports,
-            });
-
-            fs.writeFile(file, data, () => {
-                // nothing
-            });
-        }, interval);
+        setInterval(writeData, interval);
     });
 };
