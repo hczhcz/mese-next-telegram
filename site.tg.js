@@ -41,7 +41,7 @@ const nameList = (users) => {
 };
 
 module.exports = (bot) => {
-    bot.onText(/^\/join(?!\w)/, (msg, match) => {
+    bot.onText(/^\/(join|start(\w+))(?!\w)/, (msg, match) => {
         util.log(
             (msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
@@ -74,6 +74,7 @@ module.exports = (bot) => {
                 } else if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
 
+                    gather.mode = gather.mode || match[2];
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
                     userGames[msg.from.id] = msg.chat.id;
@@ -84,6 +85,11 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
+                        + (gather.mode
+                            ? 'Mode: ' + gather.mode + '\n'
+                            + '\n'
+                            : ''
+                        )
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -94,6 +100,7 @@ module.exports = (bot) => {
                 } else {
                     const gather = gathers[msg.chat.id] = {
                         chat: msg.chat,
+                        mode: match[2],
                         users: {},
                         total: 0,
                         date: now + config.tgGatherTimeout,
@@ -111,6 +118,11 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
+                        + (gather.mode
+                            ? 'Mode: ' + gather.mode + '\n'
+                            + '\n'
+                            : ''
+                        )
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -171,6 +183,11 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
+                        + (gather.mode
+                            ? 'Mode: ' + gather.mode + '\n'
+                            + '\n'
+                            : ''
+                        )
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -245,6 +262,11 @@ module.exports = (bot) => {
                 + '\n'
                 + readyTime(gather.ready, gather.date, now)
                 + '\n'
+                + (gather.mode
+                    ? 'Mode: ' + gather.mode + '\n'
+                    + '\n'
+                    : ''
+                )
                 + nameList(gather.users)
                 + '\n'
                 + '/join /flee\n',
@@ -276,6 +298,11 @@ module.exports = (bot) => {
                     i,
                     readyTime(gather.ready, gather.date, now)
                     + '\n'
+                    + (gather.mode
+                        ? 'Mode: ' + gather.mode + '\n'
+                        + '\n'
+                        : ''
+                    )
                     + nameList(gather.users)
                     + '\n'
                     + '/join /flee\n'
@@ -306,6 +333,11 @@ module.exports = (bot) => {
                         i,
                         'Game started\n'
                         + '\n'
+                        + (game.mode
+                            ? 'Mode: ' + game.mode + '\n'
+                            + '\n'
+                            : ''
+                        )
                         + nameList(game.users)
                     );
                 } else {
