@@ -122,6 +122,14 @@ module.exports = (bot) => {
     };
 
     const init = (game) => {
+        let names = '';
+
+        for (const j in game.users) {
+            names += ' ' + (game.users[j].username || game.users[j].id);
+        }
+
+        util.log('init' + names);
+
         const now = Date.now();
 
         const preset = config.tgmesePreset;
