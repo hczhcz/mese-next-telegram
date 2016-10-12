@@ -30,17 +30,17 @@ module.exports = (bot) => {
             }
         };
 
-        core.printPublic(
-            Buffer.from(game.gameData),
-            (report) => {
-                setPlayers(report);
+        if (!game.users[i]) {
+            core.printPublic(
+                Buffer.from(game.gameData),
+                (report) => {
+                    setPlayers(report);
 
-                reports[i] = {
-                    report: report,
-                    date: now + config.tgmeseReportTimeout,
-                };
+                    reports[i] = {
+                        report: report,
+                        date: now + config.tgmeseReportTimeout,
+                    };
 
-                if (game.total > 1 || !game.users[i]) {
                     bot.sendMessage(
                         i,
                         tgmeseReport(
@@ -49,8 +49,8 @@ module.exports = (bot) => {
                         )
                     );
                 }
-            }
-        );
+            );
+        }
 
         for (const j in game.users) {
             core.printPlayer(
