@@ -22,6 +22,20 @@ const readyTime = (ready, date, now) => {
         + ' seconds\n';
 };
 
+const modeList = (modes) => {
+    let result = 'Mode:\n';
+
+    if (modes.length > 0) {
+        result += 'default\n';
+    } else {
+        for (const mode in modes) {
+            result += mode + '\n';
+        }
+    }
+
+    return result;
+};
+
 const nameList = (users) => {
     let result = 'Players:\n';
 
@@ -41,7 +55,7 @@ const nameList = (users) => {
 };
 
 module.exports = (bot) => {
-    bot.onText(/^\/(join|start(\w+))(?!\w)/, (msg, match) => {
+    bot.onText(/^\/join(\w+)?(?!\w)/, (msg, match) => {
         util.log(
             (msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
@@ -74,7 +88,22 @@ module.exports = (bot) => {
                 } else if (gathers[msg.chat.id]) {
                     const gather = gathers[msg.chat.id];
 
-                    gather.mode = gather.mode || match[2];
+                    if (match[1]) { // TODO: check if mode exists
+                        let ok = true;
+
+                        for (const mode in gather.modes) {
+                            if (match[1] === mode) {
+                                ok = false;
+
+                                break;
+                            }
+                        }
+
+                        if (ok) {
+                            gather.modes.push(match[1]);
+                        }
+                    }
+
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
                     userGames[msg.from.id] = msg.chat.id;
@@ -85,11 +114,8 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
-                        + (gather.mode
-                            ? 'Mode: ' + gather.mode + '\n'
-                            + '\n'
-                            : ''
-                        )
+                        + modeList(gather.modes)
+                        + '\n'
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -100,7 +126,7 @@ module.exports = (bot) => {
                 } else {
                     const gather = gathers[msg.chat.id] = {
                         chat: msg.chat,
-                        mode: match[2],
+                        modes: [],
                         users: {},
                         total: 0,
                         cancel: 0,
@@ -119,11 +145,8 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
-                        + (gather.mode
-                            ? 'Mode: ' + gather.mode + '\n'
-                            + '\n'
-                            : ''
-                        )
+                        + modeList(gather.modes)
+                        + '\n'
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -221,11 +244,8 @@ module.exports = (bot) => {
                         + '\n'
                         + readyTime(gather.ready, gather.date, now)
                         + '\n'
-                        + (gather.mode
-                            ? 'Mode: ' + gather.mode + '\n'
-                            + '\n'
-                            : ''
-                        )
+                        + modeList(gather.modes)
+                        + '\n'
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -300,11 +320,8 @@ module.exports = (bot) => {
                 + '\n'
                 + readyTime(gather.ready, gather.date, now)
                 + '\n'
-                + (gather.mode
-                    ? 'Mode: ' + gather.mode + '\n'
-                    + '\n'
-                    : ''
-                )
+                + modeList(gather.modes)
+                + '\n'
                 + nameList(gather.users)
                 + '\n'
                 + '/join /flee\n',
@@ -336,11 +353,8 @@ module.exports = (bot) => {
                     i,
                     readyTime(gather.ready, gather.date, now)
                     + '\n'
-                    + (gather.mode
-                        ? 'Mode: ' + gather.mode + '\n'
-                        + '\n'
-                        : ''
-                    )
+                    + modeList(gather.modes)
+                    + '\n'
                     + nameList(gather.users)
                     + '\n'
                     + '/join /flee\n'
@@ -371,11 +385,8 @@ module.exports = (bot) => {
                         i,
                         'Game started\n'
                         + '\n'
-                        + (game.mode
-                            ? 'Mode: ' + game.mode + '\n'
-                            + '\n'
-                            : ''
-                        )
+                        + modeList(game.modes)
+                        + '\n'
                         + nameList(game.users)
                     );
                 } else {
