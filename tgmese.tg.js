@@ -4,6 +4,7 @@ const config = require('./config');
 const util = require('./util');
 const cache = require('./server.cache');
 const core = require('./mese.core');
+const tgmeseMode = require('./tgmese.mode');
 const tgmeseReport = require('./tgmese.report');
 
 const games = cache.games;
@@ -132,39 +133,38 @@ module.exports = (bot) => {
 
         const now = Date.now();
 
-        const preset = config.tgmesePreset;
-        const settings = config.tgmeseSettings;
+        tgmeseMode(game).onInit((preset, settings) => {
+            const allocator = (period) => {
+                return (gameData) => {
+                    if (period < settings.length) {
+                        core.alloc(
+                            gameData,
+                            settings[period],
+                            allocator(period + 1)
+                        );
+                    } else {
+                        delete game.initDate;
 
-        const allocator = (period) => {
-            return (gameData) => {
-                if (period < settings.length) {
-                    core.alloc(
-                        gameData,
-                        settings[period],
-                        allocator(period + 1)
-                    );
-                } else {
-                    delete game.initDate;
+                        game.totalPeriods = settings.length;
+                        game.closeDate = now + config.tgmeseCloseTimeout;
+                        game.closeRemind = now + config.tgmeseCloseTimeout
+                            - config.tgmeseCloseRemind;
+                        game.gameData = gameData.toJSON().data;
 
-                    game.totalPeriods = settings.length;
-                    game.closeDate = now + config.tgmeseCloseTimeout;
-                    game.closeRemind = now + config.tgmeseCloseTimeout
-                        - config.tgmeseCloseRemind;
-                    game.gameData = gameData.toJSON().data;
+                        game.period = 1;
 
-                    game.period = 1;
-
-                    sendAll(now, game, game.chat.id);
-                }
+                        sendAll(now, game, game.chat.id);
+                    }
+                };
             };
-        };
 
-        core.init(
-            String(game.total),
-            preset,
-            settings[0],
-            allocator(1)
-        );
+            core.init(
+                String(game.total),
+                preset,
+                settings[0],
+                allocator(1)
+            );
+        });
     };
 
     const decisionRe = /([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/;
