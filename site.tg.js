@@ -103,6 +103,7 @@ module.exports = (bot) => {
                         mode: match[2],
                         users: {},
                         total: 0,
+                        cancel: 0,
                         date: now + config.tgGatherTimeout,
                         remind: now + config.tgGatherTimeout
                             - config.tgGatherRemind,
@@ -161,13 +162,50 @@ module.exports = (bot) => {
         const now = Date.now();
 
         if (games[msg.chat.id]) {
-            bot.sendMessage(
-                msg.chat.id,
-                'Failed: Game is running now\n',
-                {
-                    reply_to_message_id: msg.message_id,
+            const game = games[msg.chat.id];
+
+            if (game.users[msg.from.id]) {
+                if (!game.users[msg.from.id].cancel) {
+                    game.users[msg.from.id].cancel = true;
+                    game.cancel += 1;
                 }
-            );
+
+                if (game.cancel < game.total) {
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: Called game cancellation\n'
+                        + '\n'
+                        + '/flee\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
+                } else {
+                    delete games[msg.chat.id];
+
+                    for (const j in game.users) {
+                        delete userGames[j];
+                    }
+
+                    bot.sendMessage(
+                        msg.chat.id,
+                        'OK: Called game cancellation\n'
+                        + '\n'
+                        + 'Game is canceled\n',
+                        {
+                            reply_to_message_id: msg.message_id,
+                        }
+                    );
+                }
+            } else {
+                bot.sendMessage(
+                    msg.chat.id,
+                    'Failed: You are not in this game\n',
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
+                );
+            }
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
