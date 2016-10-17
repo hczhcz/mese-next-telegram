@@ -177,7 +177,6 @@ module.exports = (bot) => {
                     );
                 } else {
                     const gather = gathers[msg.chat.id] = {
-                        chat: msg.chat,
                         modes: [],
                         users: {},
                         total: 0,

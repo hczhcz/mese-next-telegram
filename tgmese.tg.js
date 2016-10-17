@@ -122,7 +122,7 @@ module.exports = (bot) => {
         }
     };
 
-    const init = (game) => {
+    const init = (game, i) => {
         let names = '';
 
         for (const j in game.users) {
@@ -135,30 +135,35 @@ module.exports = (bot) => {
 
         tgmeseMode(game).onInit((preset, settings) => {
             const allocator = (period) => {
+                const alloc = (gameData) => {
+                    core.alloc(
+                        gameData,
+                        settings[period],
+                        allocator(period + 1)
+                    );
+                };
+
+                const done = (gameData) => {
+                    tgmeseMode(game).afterInit(gameData, (newData) => {
+                        delete game.initDate;
+
+                        game.totalPeriods = settings.length;
+                        game.closeDate = now + config.tgmeseCloseTimeout;
+                        game.closeRemind = now + config.tgmeseCloseTimeout
+                            - config.tgmeseCloseRemind;
+                        game.gameData = newData.toJSON().data;
+
+                        game.period = 1;
+
+                        sendAll(now, game, i);
+                    });
+                };
+
                 return (gameData) => {
                     if (period < settings.length) {
-                        core.alloc(
-                            gameData,
-                            settings[period],
-                            allocator(period + 1)
-                        );
+                        alloc(gameData);
                     } else {
-                        tgmeseMode(game).afterInit(
-                            gameData,
-                            (newData) => {
-                                delete game.initDate;
-
-                                game.totalPeriods = settings.length;
-                                game.closeDate = now + config.tgmeseCloseTimeout;
-                                game.closeRemind = now + config.tgmeseCloseTimeout
-                                    - config.tgmeseCloseRemind;
-                                game.gameData = newData.toJSON().data;
-
-                                game.period = 1;
-
-                                sendAll(now, game, game.chat.id);
-                            }
-                        );
+                        done(gameData);
                     }
                 };
             };
@@ -168,6 +173,43 @@ module.exports = (bot) => {
                 preset,
                 settings[0],
                 allocator(1)
+            );
+        });
+    };
+
+    const close = (game, i) => {
+        const now = Date.now();
+
+        tgmeseMode(game).onClose(Buffer.from(game.gameData), (oldData) => {
+            core.closeForce(
+                oldData,
+                (gameData) => {
+                    tgmeseMode(game).afterClose(gameData, (newData) => {
+                        game.closeDate = now + config.tgmeseCloseTimeout;
+                        game.closeRemind = now + config.tgmeseCloseTimeout
+                            - config.tgmeseCloseRemind;
+                        game.gameData = newData.toJSON().data;
+
+                        game.period += 1;
+
+                        if (game.period === game.totalPeriods) {
+                            delete games[i];
+
+                            for (const j in game.users) {
+                                delete userGames[j];
+                            }
+
+                            bot.sendMessage(
+                                i,
+                                'Game finished\n'
+                                + '\n'
+                                + 'Press /join to start a new game'
+                            );
+                        }
+
+                        sendAll(now, game, i);
+                    });
+                }
             );
         });
     };
@@ -282,7 +324,7 @@ module.exports = (bot) => {
             if (game.needInit) {
                 delete game.needInit;
 
-                init(game);
+                init(game, i);
             }
 
             if (game.closeRemind && game.closeRemind < now) {
@@ -308,44 +350,7 @@ module.exports = (bot) => {
             if (game.closeDate && game.closeDate < now) {
                 delete game.closeDate;
 
-                tgmeseMode(game).onClose(
-                    Buffer.from(game.gameData),
-                    (oldData) => {
-                        core.closeForce(
-                            oldData,
-                            (gameData) => {
-                                tgmeseMode(game).afterClose(
-                                    gameData,
-                                    (newData) => {
-                                        game.closeDate = now + config.tgmeseCloseTimeout;
-                                        game.closeRemind = now + config.tgmeseCloseTimeout
-                                            - config.tgmeseCloseRemind;
-                                        game.gameData = newData.toJSON().data;
-
-                                        game.period += 1;
-
-                                        if (game.period === game.totalPeriods) {
-                                            delete games[i];
-
-                                            for (const j in game.users) {
-                                                delete userGames[j];
-                                            }
-
-                                            bot.sendMessage(
-                                                i,
-                                                'Game finished\n'
-                                                + '\n'
-                                                + 'Press /join to start a new game'
-                                            );
-                                        }
-
-                                        sendAll(now, game, i);
-                                    }
-                                );
-                            }
-                        );
-                    }
-                );
+                close(game, i);
             }
         }
 
