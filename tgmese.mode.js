@@ -8,5 +8,17 @@ module.exports = (game) => {
                 [{}, {}, {}, {}, {}, {}, {}, {}]
             );
         },
+
+        afterInit: (gameData, callback) => {
+            callback(gameData);
+        },
+
+        onClose: (gameData, callback) => {
+            callback(gameData);
+        },
+
+        afterClose: (gameData, callback) => {
+            callback(gameData);
+        },
     };
 };

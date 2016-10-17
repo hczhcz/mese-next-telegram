@@ -143,17 +143,22 @@ module.exports = (bot) => {
                             allocator(period + 1)
                         );
                     } else {
-                        delete game.initDate;
+                        tgmeseMode(game).afterInit(
+                            gameData,
+                            (newData) => {
+                                delete game.initDate;
 
-                        game.totalPeriods = settings.length;
-                        game.closeDate = now + config.tgmeseCloseTimeout;
-                        game.closeRemind = now + config.tgmeseCloseTimeout
-                            - config.tgmeseCloseRemind;
-                        game.gameData = gameData.toJSON().data;
+                                game.totalPeriods = settings.length;
+                                game.closeDate = now + config.tgmeseCloseTimeout;
+                                game.closeRemind = now + config.tgmeseCloseTimeout
+                                    - config.tgmeseCloseRemind;
+                                game.gameData = newData.toJSON().data;
 
-                        game.period = 1;
+                                game.period = 1;
 
-                        sendAll(now, game, game.chat.id);
+                                sendAll(now, game, game.chat.id);
+                            }
+                        );
                     }
                 };
             };
@@ -303,32 +308,42 @@ module.exports = (bot) => {
             if (game.closeDate && game.closeDate < now) {
                 delete game.closeDate;
 
-                core.closeForce(
+                tgmeseMode(game).onClose(
                     Buffer.from(game.gameData),
-                    (gameData) => {
-                        game.closeDate = now + config.tgmeseCloseTimeout;
-                        game.closeRemind = now + config.tgmeseCloseTimeout
-                            - config.tgmeseCloseRemind;
-                        game.gameData = gameData.toJSON().data;
+                    (oldData) => {
+                        core.closeForce(
+                            oldData,
+                            (gameData) => {
+                                tgmeseMode(game).afterClose(
+                                    gameData,
+                                    (newData) => {
+                                        game.closeDate = now + config.tgmeseCloseTimeout;
+                                        game.closeRemind = now + config.tgmeseCloseTimeout
+                                            - config.tgmeseCloseRemind;
+                                        game.gameData = newData.toJSON().data;
 
-                        game.period += 1;
+                                        game.period += 1;
 
-                        if (game.period === game.totalPeriods) {
-                            delete games[i];
+                                        if (game.period === game.totalPeriods) {
+                                            delete games[i];
 
-                            for (const j in game.users) {
-                                delete userGames[j];
+                                            for (const j in game.users) {
+                                                delete userGames[j];
+                                            }
+
+                                            bot.sendMessage(
+                                                i,
+                                                'Game finished\n'
+                                                + '\n'
+                                                + 'Press /join to start a new game'
+                                            );
+                                        }
+
+                                        sendAll(now, game, i);
+                                    }
+                                );
                             }
-
-                            bot.sendMessage(
-                                i,
-                                'Game finished\n'
-                                + '\n'
-                                + 'Press /join to start a new game'
-                            );
-                        }
-
-                        sendAll(now, game, i);
+                        );
                     }
                 );
             }
