@@ -1,12 +1,29 @@
 'use strict';
 
 module.exports = (game) => {
+    let preset = 'modern';
+    let settings = [{}, {}, {}, {}, {}, {}, {}, {}];
+
+    for (const i in game.modes) {
+        switch (game.modes[i]) {
+            case 'classic':
+            case 'imese':
+            case 'modern': {
+                preset = game.modes[i];
+
+                break;
+            }
+            default: {
+                // TODO
+
+                break;
+            }
+        }
+    }
+
     return {
         onInit: (callback) => {
-            callback(
-                'modern',
-                [{}, {}, {}, {}, {}, {}, {}, {}]
-            );
+            callback(preset, settings);
         },
 
         afterInit: (gameData, callback) => {

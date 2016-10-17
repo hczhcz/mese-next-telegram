@@ -30,7 +30,7 @@ const modeList = (modes) => {
             result += modes[i] + '\n';
         }
     } else {
-        result += 'default\n';
+        result += '(default)\n';
     }
 
     return result;
