@@ -77,21 +77,19 @@ module.exports = (bot) => {
 
             if (match[1] === 'clear') {
                 gather.modes = [];
-            } else {
-                if (gather.modes.length < config.tgMaxModes) {
-                    let ok = true;
+            } else if (gather.modes.length < config.tgMaxModes) {
+                let ok = true;
 
-                    for (const i in gather.modes) {
-                        if (match[1] === gather.modes[i]) {
-                            ok = false;
+                for (const i in gather.modes) {
+                    if (match[1] === gather.modes[i]) {
+                        ok = false;
 
-                            break;
-                        }
+                        break;
                     }
+                }
 
-                    if (ok) {
-                        gather.modes.push(match[1]);
-                    }
+                if (ok) {
+                    gather.modes.push(match[1]);
                 }
             }
 

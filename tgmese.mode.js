@@ -2,7 +2,7 @@
 
 module.exports = (game) => {
     let preset = 'modern';
-    let settings = [{}, {}, {}, {}, {}, {}, {}, {}];
+    const settings = [{}, {}, {}, {}, {}, {}, {}, {}];
 
     const events = {
         onInit: (callback) => {

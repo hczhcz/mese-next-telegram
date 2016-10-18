@@ -330,12 +330,14 @@ module.exports = (bot) => {
             if (game.closeRemind && game.closeRemind < now) {
                 delete game.closeRemind;
 
-                bot.sendMessage(
-                    i,
-                    'Period will end in: '
-                    + Math.round((game.closeDate - now) / 1000)
-                    + ' seconds\n'
-                );
+                if (!game.users[i]) {
+                    bot.sendMessage(
+                        i,
+                        'Period will end in: '
+                        + Math.round((game.closeDate - now) / 1000)
+                        + ' seconds\n'
+                    );
+                }
 
                 for (const j in game.users) {
                     bot.sendMessage(
