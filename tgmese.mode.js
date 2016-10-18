@@ -4,23 +4,10 @@ module.exports = (game) => {
     let preset = 'modern';
     const settings = [{}, {}, {}, {}, {}, {}, {}, {}];
 
-    const events = {
-        onInit: (callback) => {
-            callback(preset, settings);
-        },
-
-        afterInit: (gameData, callback) => {
-            callback(gameData);
-        },
-
-        onClose: (gameData, callback) => {
-            callback(gameData);
-        },
-
-        afterClose: (gameData, callback) => {
-            callback(gameData);
-        },
-    };
+    const onInitEvents = [];
+    const afterInitEvents = [];
+    const onCloseEvents = [];
+    const afterCloseEvents = [];
 
     for (const i in game.modes) {
         switch (game.modes[i]) {
@@ -39,5 +26,69 @@ module.exports = (game) => {
         }
     }
 
-    return events;
+    return {
+        onInit: (callback) => {
+            let i = -1;
+
+            const exec = () => {
+                i += 1;
+
+                if (i < onInitEvents.length) {
+                    onInitEvents[i](exec);
+                } else {
+                    callback(preset, settings);
+                }
+            };
+
+            exec();
+        },
+
+        afterInit: (gameData, callback) => {
+            let i = -1;
+
+            const exec = (newData) => {
+                i += 1;
+
+                if (i < afterInitEvents.length) {
+                    afterInitEvents[i](newData, exec);
+                } else {
+                    callback(newData);
+                }
+            };
+
+            exec(gameData);
+        },
+
+        onClose: (gameData, callback) => {
+            let i = -1;
+
+            const exec = (newData) => {
+                i += 1;
+
+                if (i < onCloseEvents.length) {
+                    onCloseEvents[i](newData, exec);
+                } else {
+                    callback(newData);
+                }
+            };
+
+            exec(gameData);
+        },
+
+        afterClose: (gameData, callback) => {
+            let i = -1;
+
+            const exec = (newData) => {
+                i += 1;
+
+                if (i < afterCloseEvents.length) {
+                    afterCloseEvents[i](newData, exec);
+                } else {
+                    callback(newData);
+                }
+            };
+
+            exec(gameData);
+        },
+    };
 };
