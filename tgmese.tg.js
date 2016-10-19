@@ -65,58 +65,67 @@ module.exports = (bot) => {
                         date: now + config.tgmeseReportTimeout,
                     };
 
-                    bot.sendMessage(
-                        j,
-                        tgmeseReport(
-                            reports[j].report,
-                            'Main'
-                        )
-                    ).then(() => {
-                        const buttons = [[{
-                            text: 'Before Period',
-                            callback_data: JSON.stringify(
-                                ['Before Period', reports[j].date]
-                            ),
-                        }], [{
-                            text: 'After Period',
-                            callback_data: JSON.stringify(
-                                ['After Period', reports[j].date]
-                            ),
-                        }], [{
-                            text: 'Industry Average',
-                            callback_data: JSON.stringify(
-                                ['Industry Average', reports[j].date]
-                            ),
-                        }]];
-
+                    if (userGames[j]) {
                         bot.sendMessage(
                             j,
                             tgmeseReport(
                                 reports[j].report,
-                                'Brief'
-                            ),
-                            {
-                                reply_markup: {
-                                    inline_keyboard: buttons,
-                                },
-                            }
+                                'Main'
+                            )
                         ).then(() => {
-                            if (reports[j].report.next_settings) {
-                                bot.sendMessage(
-                                    j,
-                                    tgmeseReport(
-                                        reports[j].report,
-                                        'Decision'
-                                    )
-                                );
-                            } else {
-                                bot.sendMessage(
-                                    j,
-                                    'Game finished\n'
-                                );
-                            }
+                            const buttons = [[{
+                                text: 'Before Period',
+                                callback_data: JSON.stringify(
+                                    ['Before Period', reports[j].date]
+                                ),
+                            }], [{
+                                text: 'After Period',
+                                callback_data: JSON.stringify(
+                                    ['After Period', reports[j].date]
+                                ),
+                            }], [{
+                                text: 'Industry Average',
+                                callback_data: JSON.stringify(
+                                    ['Industry Average', reports[j].date]
+                                ),
+                            }]];
+
+                            bot.sendMessage(
+                                j,
+                                tgmeseReport(
+                                    reports[j].report,
+                                    'Brief'
+                                ),
+                                {
+                                    reply_markup: {
+                                        inline_keyboard: buttons,
+                                    },
+                                }
+                            ).then(() => {
+                                if (reports[j].report.next_settings) {
+                                    bot.sendMessage(
+                                        j,
+                                        tgmeseReport(
+                                            reports[j].report,
+                                            'Decision'
+                                        )
+                                    );
+                                } else {
+                                    bot.sendMessage(
+                                        j,
+                                        'Game finished\n'
+                                    );
+                                }
+                            });
                         });
-                    });
+                    } else {
+                        util.log(
+                            'report ' + j + '\n'
+                            + JSON.stringify(reports[j].decisions) + '\n'
+                            + JSON.stringify(reports[j].data_early) + '\n'
+                            + JSON.stringify(reports[j].data)
+                        );
+                    }
                 }
             );
         }
@@ -352,12 +361,14 @@ module.exports = (bot) => {
                 }
 
                 for (const j in game.users) {
-                    bot.sendMessage(
-                        j,
-                        'Period will end in: '
-                        + Math.round((game.closeDate - now) / 1000)
-                        + ' seconds\n'
-                    );
+                    if (userGames[j]) {
+                        bot.sendMessage(
+                            j,
+                            'Period will end in: '
+                            + Math.round((game.closeDate - now) / 1000)
+                            + ' seconds\n'
+                        );
+                    }
                 }
             }
 
