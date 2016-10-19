@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    cacheInterval: 10 * 1000,
+    cacheInterval: 5 * 1000,
     cacheFile: '/dev/shm/tgmese',
 
     tgInterval: 1000,
@@ -15,7 +15,7 @@ module.exports = {
     meseEngine: './mese',
     meseMaxPlayers: 32, // TODO
 
-    tgmeseCloseTimeout: 180 * 1000,
+    tgmeseCloseTimeout: 120 * 1000,
     tgmeseCloseRemind: 60 * 1000,
     tgmeseReportTimeout: 7200 * 1000,
 };
