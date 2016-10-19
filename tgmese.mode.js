@@ -5,9 +5,10 @@ module.exports = (game) => {
     const settings = [{}, {}, {}, {}, {}, {}, {}, {}];
 
     const onInitEvents = [];
-    const afterInitEvents = [];
+    const onStartEvents = [];
+    const onPeriodEvents = [];
     const onCloseEvents = [];
-    const afterCloseEvents = [];
+    const onFinishEvents = [];
 
     for (const i in game.modes) {
         switch (game.modes[i]) {
@@ -43,14 +44,30 @@ module.exports = (game) => {
             exec();
         },
 
-        afterInit: (gameData, callback) => {
+        onStart: (gameData, callback) => {
             let i = -1;
 
             const exec = (newData) => {
                 i += 1;
 
-                if (i < afterInitEvents.length) {
-                    afterInitEvents[i](newData, exec);
+                if (i < onStartEvents.length) {
+                    onStartEvents[i](newData, exec);
+                } else {
+                    callback(newData);
+                }
+            };
+
+            exec(gameData);
+        },
+
+        onPeriod: (gameData, callback) => {
+            let i = -1;
+
+            const exec = (newData) => {
+                i += 1;
+
+                if (i < onPeriodEvents.length) {
+                    onPeriodEvents[i](newData, exec);
                 } else {
                     callback(newData);
                 }
@@ -75,14 +92,14 @@ module.exports = (game) => {
             exec(gameData);
         },
 
-        afterClose: (gameData, callback) => {
+        onFinish: (gameData, callback) => {
             let i = -1;
 
             const exec = (newData) => {
                 i += 1;
 
-                if (i < afterCloseEvents.length) {
-                    afterCloseEvents[i](newData, exec);
+                if (i < onFinishEvents.length) {
+                    onFinishEvents[i](newData, exec);
                 } else {
                     callback(newData);
                 }

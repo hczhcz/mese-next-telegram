@@ -134,6 +134,8 @@ module.exports = (bot) => {
         const now = Date.now();
 
         tgmeseMode(game).onInit((preset, settings) => {
+            // TODO: settings.length should >= 2
+
             const allocator = (period) => {
                 const alloc = (gameData) => {
                     core.alloc(
@@ -144,16 +146,17 @@ module.exports = (bot) => {
                 };
 
                 const done = (gameData) => {
-                    tgmeseMode(game).afterInit(gameData, (newData) => {
+                    tgmeseMode(game).onStart(gameData, (newData) => {
                         delete game.initDate;
 
                         game.totalPeriods = settings.length;
+                        game.period = 1;
+
+                        game.gameData = newData.toJSON().data;
+
                         game.closeDate = now + config.tgmeseCloseTimeout;
                         game.closeRemind = now + config.tgmeseCloseTimeout
                             - config.tgmeseCloseRemind;
-                        game.gameData = newData.toJSON().data;
-
-                        game.period = 1;
 
                         sendAll(now, game, i);
                     });
@@ -184,15 +187,26 @@ module.exports = (bot) => {
             core.closeForce(
                 oldData,
                 (gameData) => {
-                    tgmeseMode(game).afterClose(gameData, (newData) => {
-                        game.closeDate = now + config.tgmeseCloseTimeout;
-                        game.closeRemind = now + config.tgmeseCloseTimeout
-                            - config.tgmeseCloseRemind;
-                        game.gameData = newData.toJSON().data;
+                    if (game.period < game.totalPeriods - 1) {
+                        tgmeseMode(game).onPeriod(gameData, (newData) => {
+                            game.period += 1;
 
-                        game.period += 1;
+                            game.gameData = newData.toJSON().data;
 
-                        if (game.period === game.totalPeriods) {
+                            game.closeDate = now + config.tgmeseCloseTimeout;
+                            game.closeRemind = now + config.tgmeseCloseTimeout
+                                - config.tgmeseCloseRemind;
+
+                            sendAll(now, game, i);
+                        });
+                    } else {
+                        tgmeseMode(game).onFinish(gameData, (newData) => {
+                            game.period += 1;
+
+                            game.gameData = newData.toJSON().data;
+
+                            sendAll(now, game, i);
+
                             delete games[i];
 
                             for (const j in game.users) {
@@ -205,10 +219,8 @@ module.exports = (bot) => {
                                 + '\n'
                                 + 'Press /join to start a new game'
                             );
-                        }
-
-                        sendAll(now, game, i);
-                    });
+                        });
+                    }
                 }
             );
         });
