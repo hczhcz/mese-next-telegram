@@ -14,6 +14,7 @@ module.exports = (game) => {
 
     for (const i in game.modes) {
         switch (game.modes[i]) {
+            // preset
             case 'classic':
             case 'imese':
             case 'modern': {
@@ -21,6 +22,31 @@ module.exports = (game) => {
 
                 break;
             }
+
+            // share
+            case '343': {
+                settings[1].share_price = 0.2;
+                settings[1].share_mk = 0.6;
+                settings[1].share_rd = 0.2;
+
+                break;
+            }
+            case '262': {
+                settings[1].share_price = 0.2;
+                settings[1].share_mk = 0.6;
+                settings[1].share_rd = 0.2;
+
+                break;
+            }
+
+            // loan
+            case 'survive': {
+                settings[1].loan_limit = 0;
+
+                break;
+            }
+
+            // AI
             case 'daybreak':
             case 'bouquet':
             case 'setsuna':
