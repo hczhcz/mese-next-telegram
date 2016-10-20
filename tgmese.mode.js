@@ -1,5 +1,7 @@
 'use strict';
 
+const core = require('./mese.core');
+
 module.exports = (game) => {
     let preset = 'modern';
     const settings = [{}, {}, {}, {}, {}, {}, {}, {}];
@@ -16,6 +18,72 @@ module.exports = (game) => {
             case 'imese':
             case 'modern': {
                 preset = game.modes[i];
+
+                break;
+            }
+            case 'daybreak':
+            case 'bouquet':
+            case 'setsuna':
+            case 'magnet': {
+                onInitEvents.push((callback) => {
+                    game.users['ai_' + game.modes[i]] = {
+                        id: 'ai_' + game.modes[i],
+                        first_name: game.modes[i],
+                        index: game.total,
+                    };
+                    game.total += 1;
+
+                    callback();
+                });
+
+                onStartEvents.push((gameData, callback) => {
+                    game.total -= 1;
+
+                    callback(gameData);
+                });
+
+                onCloseEvents.push((gameData, callback) => {
+                    core.ai(
+                        gameData,
+                        game.users['ai_' + game.modes[i]].index,
+                        game.modes[i],
+                        callback
+                    );
+                });
+
+                break;
+            }
+            case 'innocence':
+            case 'kokoro':
+            case 'saika':
+            case 'moon':
+            case 'spica': {
+                onInitEvents.push((callback) => {
+                    game.users['ai_' + game.modes[i]] = {
+                        id: 'ai_' + game.modes[i],
+                        first_name: game.modes[i],
+                        index: game.total,
+                    };
+                    game.total += 1;
+
+                    callback();
+                });
+
+                onStartEvents.push((gameData, callback) => {
+                    game.total -= 1;
+
+                    callback(gameData);
+                });
+
+                onStartEvents.push((gameData, callback) => {
+                    core.ai(
+                        gameData,
+                        game.users['ai_' + game.modes[i]].index,
+                        game.modes[i],
+                        callback
+                    );
+                });
+                onPeriodEvents.push(onStartEvents[onStartEvents.length - 1]);
 
                 break;
             }
