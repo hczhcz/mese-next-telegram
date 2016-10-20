@@ -75,39 +75,49 @@ module.exports = (bot) => {
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
-            if (match[1] === 'clear') {
-                gather.modes = [];
-            } else if (gather.modes.length < config.tgMaxModes) {
-                let ok = true;
+            if (gather.ready) {
+                bot.sendMessage(
+                    msg.chat.id,
+                    'Failed: Game is ready now\n',
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
+                );
+            } else {
+                if (match[1] === 'clear') {
+                    gather.modes = [];
+                } else if (gather.modes.length < config.tgMaxModes) {
+                    let ok = true;
 
-                for (const i in gather.modes) {
-                    if (match[1] === gather.modes[i]) {
-                        ok = false;
+                    for (const i in gather.modes) {
+                        if (match[1] === gather.modes[i]) {
+                            ok = false;
 
-                        break;
+                            break;
+                        }
+                    }
+
+                    if (ok) {
+                        gather.modes.push(match[1]);
                     }
                 }
 
-                if (ok) {
-                    gather.modes.push(match[1]);
-                }
+                bot.sendMessage(
+                    msg.chat.id,
+                    'OK: Set mode\n'
+                    + '\n'
+                    + readyTime(gather.ready, gather.date, now)
+                    + '\n'
+                    + modeList(gather.modes)
+                    + '\n'
+                    + nameList(gather.users)
+                    + '\n'
+                    + '/join /flee\n',
+                    {
+                        reply_to_message_id: msg.message_id,
+                    }
+                );
             }
-
-            bot.sendMessage(
-                msg.chat.id,
-                'OK: Set mode\n'
-                + '\n'
-                + readyTime(gather.ready, gather.date, now)
-                + '\n'
-                + modeList(gather.modes)
-                + '\n'
-                + nameList(gather.users)
-                + '\n'
-                + '/join /flee\n',
-                {
-                    reply_to_message_id: msg.message_id,
-                }
-            );
         } else {
             bot.sendMessage(
                 msg.chat.id,
