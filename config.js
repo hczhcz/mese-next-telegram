@@ -13,9 +13,9 @@ module.exports = {
     tgMessage: 'Hello from MESE bot\n',
 
     meseEngine: './mese',
-    meseMaxPlayers: 32, // TODO
+    meseMaxPlayers: 32,
 
     tgmeseCloseTimeout: 120 * 1000,
-    tgmeseCloseRemind: 60 * 1000,
+    tgmeseCloseRemind: 30 * 1000,
     tgmeseReportTimeout: 7200 * 1000,
 };

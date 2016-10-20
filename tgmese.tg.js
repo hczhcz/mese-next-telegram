@@ -180,6 +180,10 @@ module.exports = (bot) => {
                 };
             };
 
+            if (game.total > config.meseMaxPlayers) {
+                throw Error('too many players');
+            }
+
             core.init(
                 String(game.total),
                 preset,
