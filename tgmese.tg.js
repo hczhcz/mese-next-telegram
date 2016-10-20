@@ -121,9 +121,9 @@ module.exports = (bot) => {
                     } else {
                         util.log(
                             'report ' + j + '\n'
-                            + JSON.stringify(reports[j].decisions) + '\n'
-                            + JSON.stringify(reports[j].data_early) + '\n'
-                            + JSON.stringify(reports[j].data)
+                            + JSON.stringify(reports[j].report.decisions) + '\n'
+                            + JSON.stringify(reports[j].report.data_early) + '\n'
+                            + JSON.stringify(reports[j].report.data)
                         );
                     }
                 }
