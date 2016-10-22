@@ -65,7 +65,7 @@ module.exports = (bot) => {
                         date: now + config.tgmeseReportTimeout,
                     };
 
-                    if (userGames[j]) {
+                    if (isFinite(parseInt(j, 10))) {
                         bot.sendMessage(
                             j,
                             tgmeseReport(
@@ -365,7 +365,7 @@ module.exports = (bot) => {
                 }
 
                 for (const j in game.users) {
-                    if (userGames[j]) {
+                    if (isFinite(parseInt(j, 10))) {
                         bot.sendMessage(
                             j,
                             'Period will end in: '
