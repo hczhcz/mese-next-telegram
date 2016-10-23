@@ -25,15 +25,15 @@ module.exports = (game) => {
 
             // share
             case '343': {
-                settings[1].share_price = 0.2;
-                settings[1].share_mk = 0.6;
-                settings[1].share_rd = 0.2;
+                settings[1].share_price = 0.4;
+                settings[1].share_mk = 0.3;
+                settings[1].share_rd = 0.3;
 
                 break;
             }
             case '262': {
-                settings[1].share_price = 0.2;
-                settings[1].share_mk = 0.6;
+                settings[1].share_price = 0.6;
+                settings[1].share_mk = 0.2;
                 settings[1].share_rd = 0.2;
 
                 break;
