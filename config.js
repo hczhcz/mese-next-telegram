@@ -9,7 +9,7 @@ module.exports = {
     tgGatherTimeout: 600 * 1000,
     tgGatherRemind: 30 * 1000,
     tgReadyTimeout: 30 * 1000,
-    tgInitTimeout: 3 * 1000,
+    tgInitTimeout: 30 * 1000,
     tgMessage: 'Hello from MESE bot\n',
 
     meseEngine: './mese',
