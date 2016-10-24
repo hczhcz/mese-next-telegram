@@ -50,7 +50,8 @@ module.exports = (game) => {
             case 'daybreak':
             case 'bouquet':
             case 'setsuna':
-            case 'magnet': {
+            case 'magnet':
+            case 'melody': {
                 onInitEvents.push((callback) => {
                     game.users['ai_' + game.modes[i]] = {
                         id: 'ai_' + game.modes[i],
