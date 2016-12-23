@@ -8,16 +8,8 @@ const gathers = cache.gathers;
 const games = cache.games;
 const userGames = cache.userGames;
 
-const readyTime = (ready, date, now) => {
-    if (ready) {
-        return 'Game will start in: '
-            + Math.round((date - now) / 1000)
-            + ' seconds\n';
-    }
-
-    return 'Please send a "ready" command to start the game\n'
-        + '\n'
-        + 'Game will expire in: '
+const countDown = (date, now) => {
+    return 'Game will start in: '
         + Math.round((date - now) / 1000)
         + ' seconds\n';
 };
@@ -75,49 +67,39 @@ module.exports = (bot) => {
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
-            if (gather.ready) {
-                bot.sendMessage(
-                    msg.chat.id,
-                    'Failed: Game is ready now\n',
-                    {
-                        reply_to_message_id: msg.message_id,
-                    }
-                );
-            } else {
-                if (match[1] === 'clear') {
-                    gather.modes = [];
-                } else if (gather.modes.length < config.tgMaxModes) {
-                    let ok = true;
+            if (match[1] === 'clear') {
+                gather.modes = [];
+            } else if (gather.modes.length < config.tgMaxModes) {
+                let ok = true;
 
-                    for (const i in gather.modes) {
-                        if (match[1] === gather.modes[i]) {
-                            ok = false;
+                for (const i in gather.modes) {
+                    if (match[1] === gather.modes[i]) {
+                        ok = false;
 
-                            break;
-                        }
-                    }
-
-                    if (ok) {
-                        gather.modes.push(match[1]);
+                        break;
                     }
                 }
 
-                bot.sendMessage(
-                    msg.chat.id,
-                    'OK: Set mode\n'
-                    + '\n'
-                    + readyTime(gather.ready, gather.date, now)
-                    + '\n'
-                    + modeList(gather.modes)
-                    + '\n'
-                    + nameList(gather.users)
-                    + '\n'
-                    + '/join /flee\n',
-                    {
-                        reply_to_message_id: msg.message_id,
-                    }
-                );
+                if (ok) {
+                    gather.modes.push(match[1]);
+                }
             }
+
+            bot.sendMessage(
+                msg.chat.id,
+                'OK: Set mode\n'
+                + '\n'
+                + countDown(gather.date, now)
+                + '\n'
+                + modeList(gather.modes)
+                + '\n'
+                + nameList(gather.users)
+                + '\n'
+                + '/join /flee\n',
+                {
+                    reply_to_message_id: msg.message_id,
+                }
+            );
         } else {
             bot.sendMessage(
                 msg.chat.id,
@@ -172,7 +154,7 @@ module.exports = (bot) => {
                         msg.chat.id,
                         'OK: Join game\n'
                         + '\n'
-                        + readyTime(gather.ready, gather.date, now)
+                        + countDown(gather.date, now)
                         + '\n'
                         + modeList(gather.modes)
                         + '\n'
@@ -191,7 +173,7 @@ module.exports = (bot) => {
                         cancel: 0,
                         date: now + config.tgGatherTimeout,
                         remind: now + config.tgGatherTimeout
-                            - config.tgGatherRemind,
+                            - config.tgReadyTimeout,
                     };
 
                     gather.users[msg.from.id] = msg.from;
@@ -202,7 +184,7 @@ module.exports = (bot) => {
                         msg.chat.id,
                         'OK: New game\n'
                         + '\n'
-                        + readyTime(gather.ready, gather.date, now)
+                        + countDown(gather.date, now)
                         + '\n'
                         + modeList(gather.modes)
                         + '\n'
@@ -301,7 +283,7 @@ module.exports = (bot) => {
                         msg.chat.id,
                         'OK: Leave game\n'
                         + '\n'
-                        + readyTime(gather.ready, gather.date, now)
+                        + countDown(gather.date, now)
                         + '\n'
                         + modeList(gather.modes)
                         + '\n'
@@ -367,17 +349,14 @@ module.exports = (bot) => {
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
-            if (!gather.ready) {
-                gather.ready = true;
-                gather.date = now + config.tgReadyTimeout;
-                delete gather.remind;
-            }
+            gather.date = now + config.tgReadyTimeout;
+            delete gather.remind;
 
             bot.sendMessage(
                 msg.chat.id,
                 'OK: Ready to start\n'
                 + '\n'
-                + readyTime(gather.ready, gather.date, now)
+                + countDown(gather.date, now)
                 + '\n'
                 + modeList(gather.modes)
                 + '\n'
@@ -410,7 +389,7 @@ module.exports = (bot) => {
 
                 bot.sendMessage(
                     i,
-                    readyTime(gather.ready, gather.date, now)
+                    countDown(gather.date, now)
                     + '\n'
                     + modeList(gather.modes)
                     + '\n'
@@ -423,43 +402,30 @@ module.exports = (bot) => {
             if (gather.date < now) {
                 delete gathers[i];
 
-                if (gather.ready) {
-                    const game = games[i] = gather;
+                const game = games[i] = gather;
 
-                    let total = 0;
+                let total = 0;
 
-                    for (const j in game.users) {
-                        game.users[j].index = total;
-                        total += 1;
-                    }
-
-                    if (total !== game.total) {
-                        throw Error('broken data'); // never reach
-                    }
-
-                    game.needInit = true;
-                    game.initDate = now + config.tgInitTimeout;
-
-                    bot.sendMessage(
-                        i,
-                        'Game started\n'
-                        + '\n'
-                        + modeList(game.modes)
-                        + '\n'
-                        + nameList(game.users)
-                    );
-                } else {
-                    for (const j in gather.users) {
-                        delete userGames[j];
-                    }
-
-                    bot.sendMessage(
-                        i,
-                        'Game expired\n'
-                        + '\n'
-                        + 'Please /join the game again\n'
-                    );
+                for (const j in game.users) {
+                    game.users[j].index = total;
+                    total += 1;
                 }
+
+                if (total !== game.total) {
+                    throw Error('broken data'); // never reach
+                }
+
+                game.needInit = true;
+                game.initDate = now + config.tgInitTimeout;
+
+                bot.sendMessage(
+                    i,
+                    'Game started\n'
+                    + '\n'
+                    + modeList(game.modes)
+                    + '\n'
+                    + nameList(game.users)
+                );
             }
         }
 
