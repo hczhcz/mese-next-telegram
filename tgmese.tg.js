@@ -230,7 +230,7 @@ module.exports = (bot) => {
 
                             bot.sendMessage(
                                 i,
-                                'Game finished\n'
+                                'Game finished #mese\n'
                                 + '\n'
                                 + 'Press /join to start a new game'
                             );

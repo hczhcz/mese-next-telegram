@@ -89,11 +89,7 @@ module.exports = (bot) => {
                 msg.chat.id,
                 'OK: Set mode\n'
                 + '\n'
-                + countDown(gather.date, now)
-                + '\n'
                 + modeList(gather.modes)
-                + '\n'
-                + nameList(gather.users)
                 + '\n'
                 + '/join /flee\n',
                 {
@@ -154,10 +150,6 @@ module.exports = (bot) => {
                         msg.chat.id,
                         'OK: Join game\n'
                         + '\n'
-                        + countDown(gather.date, now)
-                        + '\n'
-                        + modeList(gather.modes)
-                        + '\n'
                         + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
@@ -185,10 +177,6 @@ module.exports = (bot) => {
                         'OK: New game\n'
                         + '\n'
                         + countDown(gather.date, now)
-                        + '\n'
-                        + modeList(gather.modes)
-                        + '\n'
-                        + nameList(gather.users)
                         + '\n'
                         + '/join /flee\n',
                         {
@@ -282,10 +270,6 @@ module.exports = (bot) => {
                     bot.sendMessage(
                         msg.chat.id,
                         'OK: Leave game\n'
-                        + '\n'
-                        + countDown(gather.date, now)
-                        + '\n'
-                        + modeList(gather.modes)
                         + '\n'
                         + nameList(gather.users)
                         + '\n'
