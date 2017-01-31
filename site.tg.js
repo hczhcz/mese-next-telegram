@@ -178,6 +178,8 @@ module.exports = (bot) => {
                         + '\n'
                         + countDown(gather.date, now)
                         + '\n'
+                        + nameList(gather.users)
+                        + '\n'
                         + '/join /flee\n',
                         {
                             reply_to_message_id: msg.message_id,
