@@ -44,7 +44,7 @@ module.exports = (report, section) => {
                 part = 'production';
                 writeSetting('Balanced prod rate', 'prod_rate_balanced');
                 writeSetting('Unit fee', 'unit_fee');
-                writeSetting('Deprecation rate', 'deprecation_rate');
+                writeSetting('Depreciation rate', 'depreciation_rate');
 
                 part = 'balance';
                 writeSetting('Interest rate (cash)', 'interest_rate_cash');
@@ -148,7 +148,7 @@ module.exports = (report, section) => {
             title += '\n';
 
             part = 'balance';
-            write('Deprecation', 'deprecation');
+            write('Depreciation', 'depreciation');
             write('Capital', 'capital');
             write('Size', 'size');
             write('Spending', 'spending');
