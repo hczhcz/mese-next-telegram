@@ -127,10 +127,7 @@ module.exports = (bot) => {
                 }
             );
         } else {
-            bot.sendMessage(
-                msg.from.id,
-                config.tgMessage
-            ).then((msgSent) => {
+            const botStarted = () => { // notice: the first arg may be msgSent
                 if (userGames[msg.from.id]) {
                     bot.sendMessage(
                         msg.chat.id,
@@ -186,7 +183,9 @@ module.exports = (bot) => {
                         }
                     );
                 }
-            }, () => {
+            };
+
+            const botNotStarted = () => {
                 bot.sendMessage(
                     msg.chat.id,
                     'Failed: Please start @'
@@ -202,7 +201,16 @@ module.exports = (bot) => {
                         },
                     }
                 );
-            });
+            };
+
+            if (config.tgMessage !== 'IGNORE') {
+                bot.sendMessage(
+                    msg.from.id,
+                    config.tgMessage
+                ).then(botStarted, botNotStarted);
+            } else {
+                botStarted();
+            }
         }
     });
 
