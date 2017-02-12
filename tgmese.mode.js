@@ -188,6 +188,24 @@ module.exports = (game) => {
                     callback(gameData);
                 });
 
+                if (config.tgmeseTwoPassAI) {
+                    onStartEvents.push((gameData, callback) => {
+                        core.ai(
+                            gameData,
+                            game.users['ai_' + i].index,
+                            {
+                                daybreak: 'innocence',
+                                bouquet: 'kokoro',
+                                setsuna: 'saika',
+                                magnet: 'moon',
+                                melody: 'kokoro',
+                            }[game.modes[i]],
+                            callback
+                        );
+                    });
+                    onPeriodEvents.push(onStartEvents[onStartEvents.length - 1]);
+                }
+
                 onCloseEvents.push((gameData, callback) => {
                     core.ai(
                         gameData,
@@ -196,10 +214,6 @@ module.exports = (game) => {
                         callback
                     );
                 });
-                if (config.tgmeseTwoPassAI) {
-                    onStartEvents.push(onCloseEvents[onCloseEvents.length - 1]);
-                    onPeriodEvents.push(onCloseEvents[onCloseEvents.length - 1]);
-                }
 
                 break;
             }
