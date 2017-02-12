@@ -14,11 +14,46 @@ module.exports = (game) => {
 
     for (const i in game.modes) {
         switch (game.modes[i]) {
+            // length
+            case 'once': {
+                settings.length = 2;
+
+                break;
+            }
+            case 'short': {
+                if (settings.length > 2) {
+                    settings.pop();
+                }
+
+                break;
+            }
+            case 'long': {
+                settings.push({});
+
+                break;
+            }
+
             // preset
             case 'classic':
             case 'imese':
             case 'modern': {
                 preset = game.modes[i];
+
+                break;
+            }
+
+            // demand
+            case 'randdemand': {
+                const begin = 0.75 + 0.5 * Math.random();
+                const end = 0.75 + 0.5 * Math.random();
+
+                for (let i = 1; i < settings.length; ++i) {
+                    const f1 = settings.length - 1 - i;
+                    const f2 = i - 1;
+                    const k = 1 / (f1 + f2);
+
+                    settings[i].demand = 70 * k * (f1 * begin + f2 * end);
+                }
 
                 break;
             }
@@ -38,10 +73,41 @@ module.exports = (game) => {
 
                 break;
             }
+            case 'randshare': {
+                const mk_begin = 0.15 + 0.2 * Math.random();
+                const rd_begin = 0.15 + 0.2 * Math.random();
+                const mk_end = 0.15 + 0.2 * Math.random();
+                const rd_end = 0.15 + 0.2 * Math.random();
+
+                for (let i = 1; i < settings.length; ++i) {
+                    const f1 = settings.length - 1 - i;
+                    const f2 = i - 1;
+                    const k = 1 / (f1 + f2);
+
+                    settings[i].share_price = k * (
+                        f1 * (1 - mk_begin - rd_begin)
+                        + f2 * (1 - mk_end - rd_end)
+                    );
+                    settings[i].share_mk = k * (f1 * mk_begin + f2 * mk_end);
+                    settings[i].share_rd = k * (f1 * rd_begin + f2 * rd_end);
+                }
+
+                break;
+            }
 
             // loan
             case 'survive': {
                 settings[1].loan_limit = 0;
+
+                break;
+            }
+            case 'hard': {
+                settings[1].loan_limit = 20000;
+
+                break;
+            }
+            case 'easy': {
+                settings[1].loan_limit = 50000;
 
                 break;
             }
