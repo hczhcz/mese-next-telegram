@@ -241,6 +241,39 @@ module.exports = (bot) => {
         });
     };
 
+    bot.onText(/^\/lsmode(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' lsmode'
+        );
+
+        bot.sendMessage(
+            msg.chat.id,
+            'Total periods:\n'
+            + 'once shorter longer\n'
+            + 'Presets:\n'
+            + 'classic imese modern\n'
+            + '\n'
+            + 'Demand:\n'
+            + 'socialism randdemand\n'
+            + 'Share:\n'
+            + '343 262 randshare\n'
+            + 'Loan:\n'
+            + 'survive harder easier\n'
+            + '\n'
+            + 'Misc:\n'
+            + 'halflife traveler doubletax magicpi\n'
+            + '\n'
+            + 'AI:\n'
+            + 'daybreak bouquet setsuna magnet melody\n'
+            + 'innocence kokoro saika moon spica\n',
+            {
+                reply_to_message_id: msg.message_id,
+            }
+        );
+    });
+
     const decisionRe = /([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/;
 
     bot.onText(decisionRe, (msg, match) => {
@@ -261,7 +294,7 @@ module.exports = (bot) => {
                     game.users[msg.from.id].index,
                     -1,
                     parseFloat(match[1]),
-                    parseFloat(match[2]),
+                    parseInt(match[2], 10),
                     parseFloat(match[3]),
                     parseFloat(match[4]),
                     parseFloat(match[5]),
