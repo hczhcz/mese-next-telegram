@@ -1,5 +1,6 @@
 'use strict';
 
+const config = require('./config');
 const core = require('./mese.core');
 
 module.exports = (game) => {
@@ -124,6 +125,10 @@ module.exports = (game) => {
 
                 settings[1].loan_limit -= 10000;
 
+                if (settings[1].loan_limit < 0) {
+                    settings[1].loan_limit = 0;
+                }
+
                 break;
             }
             case 'easier': {
@@ -138,8 +143,9 @@ module.exports = (game) => {
 
             // misc
             case 'halflife': {
-                settings[1].unit_fee = 4;
-                settings[1].depreciation_rate = 0.5;
+                settings[0].initial_capital = 2100;
+                settings[0].unit_fee = 4;
+                settings[0].depreciation_rate = 0.5;
 
                 break;
             }
@@ -190,6 +196,10 @@ module.exports = (game) => {
                         callback
                     );
                 });
+                if (config.tgmeseTwoPassAI) {
+                    onStartEvents.push(onCloseEvents[onCloseEvents.length - 1]);
+                    onPeriodEvents.push(onCloseEvents[onCloseEvents.length - 1]);
+                }
 
                 break;
             }

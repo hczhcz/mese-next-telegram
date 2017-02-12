@@ -17,4 +17,5 @@ module.exports = {
     tgmeseCloseTimeout: 120 * 1000,
     tgmeseCloseRemind: 30 * 1000,
     tgmeseReportTimeout: 7200 * 1000,
+    tgmeseTwoPassAI: true,
 };
