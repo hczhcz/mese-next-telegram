@@ -53,8 +53,8 @@ module.exports = (game) => {
             case 'magnet':
             case 'melody': {
                 onInitEvents.push((callback) => {
-                    game.users['ai_' + game.modes[i]] = {
-                        id: 'ai_' + game.modes[i],
+                    game.users['ai_' + i] = {
+                        id: 'ai_' + i,
                         first_name: game.modes[i],
                         index: game.total,
                     };
@@ -72,7 +72,7 @@ module.exports = (game) => {
                 onCloseEvents.push((gameData, callback) => {
                     core.ai(
                         gameData,
-                        game.users['ai_' + game.modes[i]].index,
+                        game.users['ai_' + i].index,
                         game.modes[i],
                         callback
                     );
@@ -86,8 +86,8 @@ module.exports = (game) => {
             case 'moon':
             case 'spica': {
                 onInitEvents.push((callback) => {
-                    game.users['ai_' + game.modes[i]] = {
-                        id: 'ai_' + game.modes[i],
+                    game.users['ai_' + i] = {
+                        id: 'ai_' + i,
                         first_name: game.modes[i],
                         index: game.total,
                     };
@@ -105,7 +105,7 @@ module.exports = (game) => {
                 onStartEvents.push((gameData, callback) => {
                     core.ai(
                         gameData,
-                        game.users['ai_' + game.modes[i]].index,
+                        game.users['ai_' + i].index,
                         game.modes[i],
                         callback
                     );
