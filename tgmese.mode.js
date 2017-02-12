@@ -20,14 +20,14 @@ module.exports = (game) => {
 
                 break;
             }
-            case 'short': {
+            case 'shorter': {
                 if (settings.length > 2) {
                     settings.pop();
                 }
 
                 break;
             }
-            case 'long': {
+            case 'longer': {
                 settings.push({});
 
                 break;
@@ -43,16 +43,28 @@ module.exports = (game) => {
             }
 
             // demand
+            case 'socialism': {
+                let demand = 70;
+
+                for (let i = 1; i < settings.length; ++i) {
+                    demand *= 0.5;
+                    settings[i].demand = demand;
+                }
+
+                break;
+            }
             case 'randdemand': {
                 const begin = 0.75 + 0.5 * Math.random();
                 const end = 0.75 + 0.5 * Math.random();
+                let demand = 70;
 
                 for (let i = 1; i < settings.length; ++i) {
                     const f1 = settings.length - 1 - i;
                     const f2 = i - 1;
                     const k = 1 / (f1 + f2);
 
-                    settings[i].demand = 70 * k * (f1 * begin + f2 * end);
+                    demand *= k * (f1 * begin + f2 * end);
+                    settings[i].demand = demand;
                 }
 
                 break;
@@ -120,6 +132,29 @@ module.exports = (game) => {
                 }
 
                 settings[1].loan_limit += 10000;
+
+                break;
+            }
+
+            // misc
+            case 'halflife': {
+                settings[1].unit_fee = 4;
+                settings[1].depreciation_rate = 0.5;
+
+                break;
+            }
+            case 'traveler': {
+                settings[1].inventory_fee = 10;
+
+                break;
+            }
+            case 'doubletax': {
+                settings[1].tax_rate = 0.5;
+
+                break;
+            }
+            case 'magicpi': {
+                settings[1].mpi_factor_a = 10;
 
                 break;
             }
@@ -192,6 +227,7 @@ module.exports = (game) => {
 
                 break;
             }
+
             default: {
                 // TODO
 
