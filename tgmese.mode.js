@@ -60,16 +60,20 @@ module.exports = (game) => {
 
             // share
             case '343': {
-                settings[1].share_price = 0.4;
-                settings[1].share_mk = 0.3;
-                settings[1].share_rd = 0.3;
+                for (let i = 1; i < settings.length; ++i) {
+                    settings[i].share_price = 0.4;
+                    settings[i].share_mk = 0.3;
+                    settings[i].share_rd = 0.3;
+                }
 
                 break;
             }
             case '262': {
-                settings[1].share_price = 0.6;
-                settings[1].share_mk = 0.2;
-                settings[1].share_rd = 0.2;
+                for (let i = 1; i < settings.length; ++i) {
+                    settings[i].share_price = 0.6;
+                    settings[i].share_mk = 0.2;
+                    settings[i].share_rd = 0.2;
+                }
 
                 break;
             }
@@ -101,13 +105,21 @@ module.exports = (game) => {
 
                 break;
             }
-            case 'hard': {
-                settings[1].loan_limit = 20000;
+            case 'harder': {
+                if (typeof settings[1].loan_limit !== 'number') {
+                    settings[1].loan_limit = 30000;
+                }
+
+                settings[1].loan_limit -= 10000;
 
                 break;
             }
-            case 'easy': {
-                settings[1].loan_limit = 50000;
+            case 'easier': {
+                if (typeof settings[1].loan_limit !== 'number') {
+                    settings[1].loan_limit = 30000;
+                }
+
+                settings[1].loan_limit += 10000;
 
                 break;
             }
