@@ -26,7 +26,7 @@ Before running the server, you may do the following steps:
 6. Put MESE-Next Engine under the same directory as MESE-Next Telegram Server's, and give it execution permission;
 7. Edit `config.js` if you want to change some configurations;
 8. Put your Telegram bot token in `token` under the same directory as MESE-Next Telegram Server's
-9. Now, you could run `tgmese.main.js` using Node.js.
+9. Now, you could run `main.tg.js` using Node.js.
 
 License
 ---
