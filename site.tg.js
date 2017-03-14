@@ -69,7 +69,7 @@ module.exports = (bot) => {
 
             if (match[1] === 'clear') {
                 gather.modes = [];
-            } else if (gather.modes.length < config.tgMaxModes) {
+            } else if (gather.modes.length < config.gatherMaxModes) {
                 gather.modes.push(match[1]);
             }
 
@@ -148,9 +148,9 @@ module.exports = (bot) => {
                         users: {},
                         total: 0,
                         cancel: 0,
-                        date: now + config.tgGatherTimeout,
-                        remind: now + config.tgGatherTimeout
-                            - config.tgReadyTimeout,
+                        date: now + config.gatherTimeout,
+                        remind: now + config.gatherTimeout
+                            - config.gatherReadyTimeout,
                     };
 
                     gather.users[msg.from.id] = msg.from;
@@ -331,7 +331,7 @@ module.exports = (bot) => {
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
-            gather.date = now + config.tgReadyTimeout;
+            gather.date = now + config.gatherReadyTimeout;
             delete gather.remind;
 
             bot.sendMessage(
@@ -398,7 +398,7 @@ module.exports = (bot) => {
                 }
 
                 game.needInit = true;
-                game.initDate = now + config.tgInitTimeout;
+                game.initDate = now + config.gatherInitTimeout;
 
                 bot.sendMessage(
                     i,

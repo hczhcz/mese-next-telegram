@@ -4,11 +4,12 @@ module.exports = {
     cacheInterval: 5 * 1000,
     cacheFile: '/dev/shm/tgmese',
 
+    gatherMaxModes: 16,
+    gatherTimeout: 300 * 1000,
+    gatherReadyTimeout: 30 * 1000,
+    gatherInitTimeout: 30 * 1000,
+
     tgInterval: 1000,
-    tgMaxModes: 16,
-    tgGatherTimeout: 300 * 1000,
-    tgReadyTimeout: 30 * 1000,
-    tgInitTimeout: 30 * 1000,
     tgMessage: 'Hello from MESE bot\n',
 
     meseEngine: './mese',
