@@ -12,6 +12,8 @@ module.exports = {
     tgInterval: 1000,
     tgMessage: 'Hello from MESE bot\n',
 
+    wxInterval: 1000,
+
     meseEngine: './mese',
     meseMaxPlayers: 32,
 
