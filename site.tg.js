@@ -54,8 +54,6 @@ module.exports = (bot) => {
             + ' mode ' + match[1]
         );
 
-        const now = Date.now();
-
         if (games[msg.chat.id]) {
             bot.sendMessage(
                 msg.chat.id,
@@ -191,13 +189,13 @@ module.exports = (bot) => {
                 );
             };
 
-            if (config.tgMessage !== 'IGNORE') {
+            if (config.tgMessage === 'IGNORE') {
+                botStarted();
+            } else {
                 bot.sendMessage(
                     msg.from.id,
                     config.tgMessage
                 ).then(botStarted, botNotStarted);
-            } else {
-                botStarted();
             }
         }
     });
@@ -208,8 +206,6 @@ module.exports = (bot) => {
             + ':' + (msg.from.username || msg.from.id)
             + ' flee'
         );
-
-        const now = Date.now();
 
         if (games[msg.chat.id]) {
             const game = games[msg.chat.id];

@@ -13,8 +13,8 @@ module.exports = (game) => {
     const onCloseEvents = [];
     const onFinishEvents = [];
 
-    for (const i in game.modes) {
-        switch (game.modes[i]) {
+    for (const mode in game.modes) {
+        switch (game.modes[mode]) {
             // length
             case 'once': {
                 settings.length = 2;
@@ -38,7 +38,7 @@ module.exports = (game) => {
             case 'classic':
             case 'imese':
             case 'modern': {
-                preset = game.modes[i];
+                preset = game.modes[mode];
 
                 break;
             }
@@ -47,7 +47,7 @@ module.exports = (game) => {
             case 'socialism': {
                 let demand = 70;
 
-                for (let i = 1; i < settings.length; ++i) {
+                for (let i = 1; i < settings.length; i += 1) {
                     demand *= 0.5;
                     settings[i].demand = demand;
                 }
@@ -59,12 +59,12 @@ module.exports = (game) => {
                 const end = 0.75 + 0.5 * Math.random();
                 let demand = 70;
 
-                for (let i = 1; i < settings.length; ++i) {
+                for (let i = 1; i < settings.length; i += 1) {
                     const f1 = settings.length - 1 - i;
                     const f2 = i - 1;
-                    const k = 1 / (f1 + f2);
+                    const rev = 1 / (f1 + f2);
 
-                    demand *= k * (f1 * begin + f2 * end);
+                    demand *= rev * (f1 * begin + f2 * end);
                     settings[i].demand = demand;
                 }
 
@@ -73,7 +73,7 @@ module.exports = (game) => {
 
             // share
             case '343': {
-                for (let i = 1; i < settings.length; ++i) {
+                for (let i = 1; i < settings.length; i += 1) {
                     settings[i].share_price = 0.4;
                     settings[i].share_mk = 0.3;
                     settings[i].share_rd = 0.3;
@@ -82,7 +82,7 @@ module.exports = (game) => {
                 break;
             }
             case '262': {
-                for (let i = 1; i < settings.length; ++i) {
+                for (let i = 1; i < settings.length; i += 1) {
                     settings[i].share_price = 0.6;
                     settings[i].share_mk = 0.2;
                     settings[i].share_rd = 0.2;
@@ -96,17 +96,17 @@ module.exports = (game) => {
                 const mk_end = 0.15 + 0.2 * Math.random();
                 const rd_end = 0.15 + 0.2 * Math.random();
 
-                for (let i = 1; i < settings.length; ++i) {
+                for (let i = 1; i < settings.length; i += 1) {
                     const f1 = settings.length - 1 - i;
                     const f2 = i - 1;
-                    const k = 1 / (f1 + f2);
+                    const rev = 1 / (f1 + f2);
 
-                    settings[i].share_price = k * (
+                    settings[i].share_price = rev * (
                         f1 * (1 - mk_begin - rd_begin)
                         + f2 * (1 - mk_end - rd_end)
                     );
-                    settings[i].share_mk = k * (f1 * mk_begin + f2 * mk_end);
-                    settings[i].share_rd = k * (f1 * rd_begin + f2 * rd_end);
+                    settings[i].share_mk = rev * (f1 * mk_begin + f2 * mk_end);
+                    settings[i].share_rd = rev * (f1 * rd_begin + f2 * rd_end);
                 }
 
                 break;
@@ -172,9 +172,9 @@ module.exports = (game) => {
             case 'magnet':
             case 'melody': {
                 onInitEvents.push((callback) => {
-                    game.users['ai_' + i] = {
-                        id: 'ai_' + i,
-                        first_name: game.modes[i],
+                    game.users['ai_' + mode] = {
+                        id: 'ai_' + mode,
+                        first_name: game.modes[mode],
                         index: game.total,
                     };
                     game.total += 1;
@@ -190,27 +190,31 @@ module.exports = (game) => {
 
                 if (config.tgmeseTwoPassAI) {
                     onStartEvents.push((gameData, callback) => {
+                        const aiMap = {
+                            daybreak: 'innocence',
+                            bouquet: 'kokoro',
+                            setsuna: 'saika',
+                            magnet: 'moon',
+                            melody: 'kokoro',
+                        };
+
                         core.ai(
                             gameData,
-                            game.users['ai_' + i].index,
-                            {
-                                daybreak: 'innocence',
-                                bouquet: 'kokoro',
-                                setsuna: 'saika',
-                                magnet: 'moon',
-                                melody: 'kokoro',
-                            }[game.modes[i]],
+                            game.users['ai_' + mode].index,
+                            aiMap[game.modes[mode]],
                             callback
                         );
                     });
-                    onPeriodEvents.push(onStartEvents[onStartEvents.length - 1]);
+                    onPeriodEvents.push(
+                        onStartEvents[onStartEvents.length - 1]
+                    );
                 }
 
                 onCloseEvents.push((gameData, callback) => {
                     core.ai(
                         gameData,
-                        game.users['ai_' + i].index,
-                        game.modes[i],
+                        game.users['ai_' + mode].index,
+                        game.modes[mode],
                         callback
                     );
                 });
@@ -223,9 +227,9 @@ module.exports = (game) => {
             case 'moon':
             case 'spica': {
                 onInitEvents.push((callback) => {
-                    game.users['ai_' + i] = {
-                        id: 'ai_' + i,
-                        first_name: game.modes[i],
+                    game.users['ai_' + mode] = {
+                        id: 'ai_' + mode,
+                        first_name: game.modes[mode],
                         index: game.total,
                     };
                     game.total += 1;
@@ -242,12 +246,14 @@ module.exports = (game) => {
                 onStartEvents.push((gameData, callback) => {
                     core.ai(
                         gameData,
-                        game.users['ai_' + i].index,
-                        game.modes[i],
+                        game.users['ai_' + mode].index,
+                        game.modes[mode],
                         callback
                     );
                 });
-                onPeriodEvents.push(onStartEvents[onStartEvents.length - 1]);
+                onPeriodEvents.push(
+                    onStartEvents[onStartEvents.length - 1]
+                );
 
                 break;
             }
