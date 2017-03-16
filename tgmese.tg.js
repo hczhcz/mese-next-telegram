@@ -274,7 +274,7 @@ module.exports = (bot) => {
         );
     });
 
-    const decisionRe = /([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/;
+    const decisionRe = /^\/?([\d.]+) +(\d+) +([\d.]+) +([\d.]+) +([\d.]+)$/;
 
     bot.onText(decisionRe, (msg, match) => {
         util.log(
