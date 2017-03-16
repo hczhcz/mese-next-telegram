@@ -37,6 +37,18 @@ module.exports = (interval, handlers, login, logout) => {
             timerEvents.push(event);
         };
 
+        bot.onText = (re, event) => {
+            bot.on('message', (msg) => {
+                if (msg.MsgType === bot.CONF.MSGTYPE_TEXT) {
+                    const match = msg.Content.match(re);
+
+                    if (match) {
+                        event(msg, match);
+                    }
+                }
+            });
+        };
+
         for (const handler of handlers) {
             handler(bot);
         }
