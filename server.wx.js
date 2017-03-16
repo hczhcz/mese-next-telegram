@@ -3,7 +3,7 @@
 const Wechat = require('wechat4u');
 const qrcode = require('qrcode-terminal');
 
-module.exports = (interval, handlers) => {
+module.exports = (interval, handlers, login, logout) => {
     const bot = new Wechat();
 
     bot.start();
@@ -41,4 +41,7 @@ module.exports = (interval, handlers) => {
             handler(bot);
         }
     });
+
+    bot.on('login', login);
+    bot.on('logout', logout);
 };

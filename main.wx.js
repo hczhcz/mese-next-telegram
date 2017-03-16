@@ -19,8 +19,12 @@ cache.init(
         util.log('bot init');
 
         wx(config.wxInterval, [
-            // require('./site.wx'),
-            // require('./tgmese.wx'),
-        ]);
+            require('./site.wx'),
+            require('./tgmese.wx'),
+        ], (bot) => {
+            util.log('bot login');
+        }, (bot) => {
+            util.log('bot logout');
+        });
     }
 );
