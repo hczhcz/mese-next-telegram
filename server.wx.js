@@ -13,6 +13,9 @@ module.exports = (interval, handlers, login, logout) => {
             'https://login.weixin.qq.com/l/' + uuid,
             {
                 small: true,
+            },
+            (qr) => {
+                console.warn(qr);
             }
         );
     });
@@ -33,20 +36,60 @@ module.exports = (interval, handlers, login, logout) => {
 
         setTimeout(timer, interval);
 
+        // mock object
+        bot.me = {
+            username: 'bot',
+        };
+
         bot.onTimer = (event) => {
             timerEvents.push(event);
         };
 
         bot.onText = (re, event) => {
             bot.on('message', (msg) => {
-                if (msg.MsgType === bot.CONF.MSGTYPE_TEXT) {
-                    const match = msg.Content.match(re);
+                if (
+                    !msg.isSendBySelf
+                    && msg.MsgType === bot.CONF.MSGTYPE_TEXT
+                ) {
+                    msg.message_id = 0; // mock
+
+                    const tgUser = (user) => {
+                        return {
+                            username: user.slice(1, 9),
+                            id: user,
+                        };
+                    };
+
+                    const tgGroup = (user) => {
+                        return {
+                            username: 'group_' + user.slice(2, 10),
+                            id: user,
+                        };
+                    };
+
+                    if (msg.FromUserName.slice(0, 2) === '@@') {
+                        msg.from = tgUser(msg.ToUserName);
+                        msg.chat = tgGroup(msg.FromUserName);
+                        msg.raw = msg.Content.split('\n')[1];
+                    } else {
+                        msg.from = tgUser(msg.FromUserName);
+                        msg.chat = tgUser(msg.FromUserName);
+                        msg.raw = msg.Content;
+                    }
+
+                    const match = msg.raw.match(re);
 
                     if (match) {
                         event(msg, match);
                     }
                 }
             });
+        };
+
+        bot.sendMessage = (user, text) => {
+            // TODO: callback query
+
+            return bot.sendText(text, user);
         };
 
         for (const handler of handlers) {

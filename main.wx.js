@@ -19,8 +19,8 @@ cache.init(
         util.log('bot init');
 
         wx(config.wxInterval, [
-            require('./site.wx'),
-            require('./tgmese.wx'),
+            require('./site.tg'), // use adaptor
+            require('./tgmese.tg'), // use adaptor
         ], (bot) => {
             util.log('bot login');
         }, (bot) => {
