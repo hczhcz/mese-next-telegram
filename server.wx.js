@@ -55,22 +55,24 @@ module.exports = (interval, handlers, login, logout) => {
 
                     const tgUser = (user) => {
                         return {
-                            username: user.slice(1, 9),
+                            username: bot.contacts[user].getDisplayName(),
                             id: user,
                         };
                     };
 
                     const tgGroup = (user) => {
                         return {
-                            username: 'group_' + user.slice(2, 10),
+                            username: bot.contacts[user].getDisplayName(),
                             id: user,
                         };
                     };
 
                     if (msg.FromUserName.slice(0, 2) === '@@') {
-                        msg.from = tgUser(msg.ToUserName);
+                        const content = msg.OriginalContent.split(':<br/>');
+
+                        msg.from = tgUser(content[0]);
                         msg.chat = tgGroup(msg.FromUserName);
-                        msg.raw = msg.Content.split('\n')[1];
+                        msg.raw = content[1];
                     } else {
                         msg.from = tgUser(msg.FromUserName);
                         msg.chat = tgUser(msg.FromUserName);
