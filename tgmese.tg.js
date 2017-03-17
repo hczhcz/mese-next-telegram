@@ -65,7 +65,16 @@ module.exports = (bot) => {
                         date: now + config.tgmeseReportTimeout,
                     };
 
-                    if (isFinite(parseInt(j, 10))) {
+                    if (j.match(/^ai_/)) {
+                        util.log(
+                            'report ' + j + '\n'
+                            + JSON.stringify(reports[j].report.decisions)
+                            + '\n'
+                            + JSON.stringify(reports[j].report.data_early)
+                            + '\n'
+                            + JSON.stringify(reports[j].report.data)
+                        );
+                    } else {
                         bot.sendMessage(
                             j,
                             tgmeseReport(
@@ -118,15 +127,6 @@ module.exports = (bot) => {
                                 }
                             });
                         });
-                    } else {
-                        util.log(
-                            'report ' + j + '\n'
-                            + JSON.stringify(reports[j].report.decisions)
-                            + '\n'
-                            + JSON.stringify(reports[j].report.data_early)
-                            + '\n'
-                            + JSON.stringify(reports[j].report.data)
-                        );
                     }
                 }
             );
@@ -400,7 +400,7 @@ module.exports = (bot) => {
                 }
 
                 for (const j in game.users) {
-                    if (isFinite(parseInt(j, 10))) {
+                    if (!j.match(/^ai_/)) {
                         bot.sendMessage(
                             j,
                             'Period will end in: '
