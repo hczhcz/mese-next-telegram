@@ -358,6 +358,48 @@ module.exports = (bot) => {
         }
     });
 
+    bot.onText(/^\/report(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' report'
+        );
+
+        if (reports[msg.from.id]) {
+            bot.sendMessage(
+                msg.chat.id,
+                tgmeseReport(
+                    reports[msg.from.id].report,
+                    'Before Period'
+                )
+            ).then(() => {
+                bot.sendMessage(
+                    msg.chat.id,
+                    tgmeseReport(
+                        reports[msg.from.id].report,
+                        'After Period'
+                    )
+                ).then(() => {
+                    bot.sendMessage(
+                        msg.chat.id,
+                        tgmeseReport(
+                            reports[msg.from.id].report,
+                            'Industry Average'
+                        )
+                    );
+                });
+            });
+        } else {
+            bot.sendMessage(
+                msg.chat.id,
+                'Failed: Your report is not available\n',
+                {
+                    reply_to_message_id: msg.message_id,
+                }
+            );
+        }
+    });
+
     bot.on('callback_query', (query) => {
         const data = JSON.parse(query.data);
 
