@@ -243,7 +243,7 @@ module.exports = (bot) => {
 
     bot.onText(/^\/lsmode(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' lsmode'
         );
@@ -278,7 +278,7 @@ module.exports = (bot) => {
 
     bot.onText(decisionRe, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' submit'
         );
@@ -360,7 +360,7 @@ module.exports = (bot) => {
 
     bot.onText(/^\/report(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' report'
         );

@@ -49,7 +49,7 @@ const nameList = (users) => {
 module.exports = (bot) => {
     bot.onText(/^\/mode(\w+)(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' mode ' + match[1]
         );
@@ -97,7 +97,7 @@ module.exports = (bot) => {
 
     bot.onText(/^\/join(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' join'
         );
@@ -202,7 +202,7 @@ module.exports = (bot) => {
 
     bot.onText(/^\/flee(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' flee'
         );
@@ -309,7 +309,7 @@ module.exports = (bot) => {
 
     bot.onText(/^\/ready(?!\w)/, (msg, match) => {
         util.log(
-            (msg.chat.username || msg.chat.id)
+            (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
             + ' ready'
         );
