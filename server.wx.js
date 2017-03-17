@@ -20,7 +20,6 @@ module.exports = (interval, handlers, login, logout) => {
         );
     });
 
-    // TODO: duplicated code
     bot.on('login', () => {
         const timerEvents = [];
 
@@ -36,10 +35,13 @@ module.exports = (interval, handlers, login, logout) => {
 
         setTimeout(timer, interval);
 
-        // mock object
-        bot.me = {
-            username: 'bot',
-        };
+        for (const i in bot.contacts) {
+            if (bot.contacts[i].isSelf) {
+                bot.me = {
+                    username: bot.contacts[i].getDisplayName(),
+                };
+            }
+        }
 
         bot.onTimer = (event) => {
             timerEvents.push(event);
@@ -88,7 +90,7 @@ module.exports = (interval, handlers, login, logout) => {
             });
         };
 
-        bot.sendMessage = (user, text) => {
+        bot.sendMessage = (user, text, options) => {
             // TODO: callback query
 
             return bot.sendText(text, user);
