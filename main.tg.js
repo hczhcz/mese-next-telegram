@@ -12,11 +12,11 @@ process.on('uncaughtException', (err) => {
     util.err(err);
 });
 
-util.log('cache init ' + config.cacheFile);
+util.log('cache init ' + config.tgCacheFile);
 
 cache.init(
-    config.cacheInterval,
-    config.cacheFile,
+    config.tgCacheInterval,
+    config.tgCacheFile,
     () => {
         fs.readFile('token', (err, data) => {
             if (err) {

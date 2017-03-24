@@ -10,11 +10,11 @@ process.on('uncaughtException', (err) => {
     util.err(err);
 });
 
-util.log('cache init ' + config.cacheFile);
+util.log('cache init ' + config.wxCacheFile);
 
 cache.init(
-    config.cacheInterval,
-    config.cacheFile,
+    config.wxCacheInterval,
+    config.wxCacheFile,
     () => {
         util.log('bot init');
 

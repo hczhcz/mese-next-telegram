@@ -1,9 +1,6 @@
 'use strict';
 
 module.exports = {
-    cacheInterval: 5 * 1000,
-    cacheFile: '/dev/shm/tgmese',
-
     gatherMaxModes: 16,
     gatherTimeout: 300 * 1000,
     gatherReadyTimeout: 30 * 1000,
@@ -11,8 +8,12 @@ module.exports = {
 
     tgInterval: 1000,
     tgMessage: 'Hello from MESE bot\n',
+    tgCacheInterval: 5 * 1000,
+    tgCacheFile: '/dev/shm/tgmese_tg',
 
     wxInterval: 1000,
+    wxCacheInterval: 5 * 1000,
+    wxCacheFile: '/dev/shm/tgmese_wx',
 
     meseEngine: './mese',
     meseMaxPlayers: 32,
