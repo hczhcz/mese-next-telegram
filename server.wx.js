@@ -74,14 +74,14 @@ module.exports = (interval, handlers, login, logout) => {
 
                         msg.from = tgUser(content[0]);
                         msg.chat = tgGroup(msg.FromUserName);
-                        msg.raw = content[1];
+                        msg.text = content[1];
                     } else {
                         msg.from = tgUser(msg.FromUserName);
                         msg.chat = tgUser(msg.FromUserName);
-                        msg.raw = msg.Content;
+                        msg.text = msg.Content;
                     }
 
-                    const match = msg.raw.match(re);
+                    const match = msg.text.match(re);
 
                     if (match) {
                         event(msg, match);
