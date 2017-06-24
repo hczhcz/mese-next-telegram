@@ -4,7 +4,7 @@ module.exports = {
     gatherMaxModes: 16,
     gatherTimeout: 300 * 1000,
     gatherReadyTimeout: 30 * 1000,
-    gatherInitTimeout: 30 * 1000,
+    gatherInitTimeout: 60 * 1000,
 
     tgInterval: 1000,
     tgMessage: 'Hello from MESE bot\n',
