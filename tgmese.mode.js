@@ -55,8 +55,8 @@ module.exports = (game) => {
                 break;
             }
             case 'randdemand': {
-                const begin = 0.75 + 0.5 * Math.random();
-                const end = 0.75 + 0.5 * Math.random();
+                const begin = 0.8 + 0.4 * Math.random();
+                const end = 0.8 + 0.4 * Math.random();
                 let demand = 70;
 
                 for (let i = 1; i < settings.length; i += 1) {
@@ -160,7 +160,12 @@ module.exports = (game) => {
                 break;
             }
             case 'magicpi': {
-                settings[1].mpi_factor_a = 10;
+                settings[1].mpi_factor_a = 50;
+                settings[1].mpi_factor_b = 50;
+                settings[1].mpi_factor_c = 50;
+                settings[1].mpi_factor_d = 50;
+                settings[1].mpi_factor_e = 50;
+                settings[1].mpi_factor_f = 50;
 
                 break;
             }
