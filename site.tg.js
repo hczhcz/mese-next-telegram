@@ -18,8 +18,8 @@ const modeList = (modes) => {
     let result = 'Mode:\n';
 
     if (modes.length > 0) {
-        for (const i in modes) {
-            result += modes[i] + '\n';
+        for (const mode in modes) {
+            result += modes[mode] + '\n';
         }
     } else {
         result += '(default)\n';
@@ -65,15 +65,63 @@ module.exports = (bot) => {
         } else if (gathers[msg.chat.id]) {
             const gather = gathers[msg.chat.id];
 
-            if (match[1] === 'clear') {
-                gather.modes = [];
-            } else if (gather.modes.length < config.gatherMaxModes) {
+            if (gather.modes.length < config.gatherMaxModes) {
                 gather.modes.push(match[1]);
             }
 
             bot.sendMessage(
                 msg.chat.id,
                 'OK: Set mode\n'
+                + '\n'
+                + modeList(gather.modes)
+                + '\n'
+                + '/join /flee\n',
+                {
+                    reply_to_message_id: msg.message_id,
+                }
+            );
+        } else {
+            bot.sendMessage(
+                msg.chat.id,
+                'Failed: Game does not exist\n'
+                + '\n'
+                + 'Press /join to start a new game\n',
+                {
+                    reply_to_message_id: msg.message_id,
+                }
+            );
+        }
+    });
+
+    bot.onText(/^\/rmmode(\w+)(?!\w)/, (msg, match) => {
+        util.log(
+            (msg.chat.title || msg.chat.username || msg.chat.id)
+            + ':' + (msg.from.username || msg.from.id)
+            + ' rmmode ' + match[1]
+        );
+
+        if (games[msg.chat.id]) {
+            bot.sendMessage(
+                msg.chat.id,
+                'Failed: Game is running now\n',
+                {
+                    reply_to_message_id: msg.message_id,
+                }
+            );
+        } else if (gathers[msg.chat.id]) {
+            const gather = gathers[msg.chat.id];
+
+            for (const mode in gather.modes) {
+                if (gather.modes[mode] === match[1]) {
+                    gather.modes.splice(mode, 1);
+
+                    break;
+                }
+            }
+
+            bot.sendMessage(
+                msg.chat.id,
+                'OK: Unset mode\n'
                 + '\n'
                 + modeList(gather.modes)
                 + '\n'
