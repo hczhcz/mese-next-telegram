@@ -29,7 +29,9 @@ module.exports = (game) => {
                 break;
             }
             case 'longer': {
-                settings.push({});
+                if (settings.length < 32) {
+                    settings.push({});
+                }
 
                 break;
             }

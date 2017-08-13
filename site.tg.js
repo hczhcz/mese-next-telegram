@@ -47,7 +47,7 @@ const nameList = (users) => {
 };
 
 module.exports = (bot) => {
-    bot.onText(/^\/mode(\w+)(?!\w)/, (msg, match) => {
+    bot.onText(/^\/mode ?(\w+)/, (msg, match) => {
         util.log(
             (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
@@ -93,7 +93,7 @@ module.exports = (bot) => {
         }
     });
 
-    bot.onText(/^\/rmmode(\w+)(?!\w)/, (msg, match) => {
+    bot.onText(/^\/rmmode ?(\w+)/, (msg, match) => {
         util.log(
             (msg.chat.title || msg.chat.username || msg.chat.id)
             + ':' + (msg.from.username || msg.from.id)
