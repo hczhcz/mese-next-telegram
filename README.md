@@ -1,6 +1,8 @@
 MESE-Next Telegram and WeChat Server
 ===
 
+This is a chatbot server which runs a fan-made variant of MESE (Management and Economics Simulation Exercise) on Telegram and WeChat. [@mese_bot](https://t.me/mese_bot) is powered by this project.
+
 This project is based on [MESE-Next](https://github.com/hczhcz/mese-next).
 
 Requirements
@@ -23,12 +25,12 @@ Before running the server, you may do the following steps:
 2. Install Node.js;
 3. Install NPM (Node.js Package Manager);
 4. Install required NPM packages: `node-telegram-bot-api` for Telegram, or `wechat4u` and `qrcode-terminal` for WeChat;
-5. Make sure MESE-Next Engine is under the same directory as the server's, and give it execution permission (`chmod +x`);
+5. Make sure that MESE-Next Engine is in the same directory as the server's, and give it execution permission (`chmod +x`);
 6. Edit `config.js` if you want to change some configurations.
 
 To run the server for Telegram:
 
-7. Put your bot token in `token` under the same directory as the server's;
+7. Put your bot token in `token` in the same directory as the server's;
 8. Run `main.tg.js` using Node.js.
 
 To run the server for WeChat:
