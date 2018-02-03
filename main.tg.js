@@ -9,6 +9,7 @@ const tg = require('./server.tg');
 
 process.on('uncaughtException', (err) => {
     util.log('uncaught exception');
+    util.err(Date());
     util.err(err);
 });
 
