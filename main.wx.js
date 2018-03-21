@@ -6,7 +6,6 @@ const cache = require('./server.cache');
 const wx = require('./server.wx');
 
 process.on('uncaughtException', (err) => {
-    util.log('uncaught exception');
     util.err(Date());
     util.err(err);
 });

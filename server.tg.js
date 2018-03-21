@@ -30,6 +30,12 @@ module.exports = (token, interval, handlers) => {
             timerEvents.push(event);
         };
 
+        bot.on('polling_error', (err) => {
+            if (!(err instanceof TelegramBot.errors.ParseError)) {
+                throw err;
+            }
+        });
+
         for (const handler of handlers) {
             handler(bot);
         }
