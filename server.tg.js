@@ -24,7 +24,8 @@ module.exports = (token, interval, handlers) => {
             setTimeout(timer, interval);
         };
 
-        setTimeout(timer, interval); // TODO: sync with poll?
+        // TODO: sync with poll?
+        setTimeout(timer, interval);
 
         bot.onTimer = (event) => {
             timerEvents.push(event);

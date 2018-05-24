@@ -161,7 +161,8 @@ module.exports = (bot) => {
                 }
             );
         } else {
-            const botStarted = () => { // notice: the first arg may be msgSent
+            // notice: the first arg may be msgSent
+            const botStarted = () => {
                 if (userGames[msg.from.id]) {
                     bot.sendMessage(
                         msg.chat.id,
@@ -438,7 +439,8 @@ module.exports = (bot) => {
                 }
 
                 if (total !== game.total) {
-                    throw Error('broken data'); // never reach
+                    // never reach
+                    throw Error('broken data');
                 }
 
                 game.needInit = true;

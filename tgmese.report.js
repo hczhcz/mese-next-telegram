@@ -5,8 +5,10 @@ module.exports = (report, section) => {
         + ' - ' + section + '\n'
         + '\n';
 
-    let target = {}; // notice: unnecessary init
-    let part = ''; // notice: unnecessary init
+    // notice: unnecessary init
+    let target = {};
+    // notice: unnecessary init
+    let part = '';
 
     const write = (name, item) => {
         title += name

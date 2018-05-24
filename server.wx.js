@@ -53,7 +53,8 @@ module.exports = (interval, handlers, login, logout) => {
                     !msg.isSendBySelf
                     && msg.MsgType === bot.CONF.MSGTYPE_TEXT
                 ) {
-                    msg.message_id = 0; // mock
+                    // mock
+                    msg.message_id = 0;
 
                     const tgUser = (user) => {
                         return {
