@@ -190,7 +190,7 @@ module.exports = (bot) => {
                         }
                     );
                 } else {
-                    const gather = gathers[msg.chat.id] = {
+                    gathers[msg.chat.id] = {
                         modes: [],
                         users: {},
                         total: 0,
@@ -199,6 +199,8 @@ module.exports = (bot) => {
                         remind: now + config.gatherTimeout
                             - config.gatherReadyTimeout,
                     };
+
+                    const gather = gathers[msg.chat.id];
 
                     gather.users[msg.from.id] = msg.from;
                     gather.total += 1;
@@ -429,7 +431,9 @@ module.exports = (bot) => {
             if (gather.date < now) {
                 delete gathers[i];
 
-                const game = games[i] = gather;
+                games[i] = gather;
+
+                const game = games[i];
 
                 let total = 0;
 
